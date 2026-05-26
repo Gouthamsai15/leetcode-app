@@ -2556,7 +2556,18 @@ function openLeetCodeLink(url, title) {
   const text = document.getElementById('leetcodeReturnText');
   if(text) text.textContent = `Opened: ${title}`;
   if(bar) bar.classList.add('show');
-  window.open(url, '_blank');
+
+  const ua = navigator.userAgent || '';
+  const isAndroid = /Android/i.test(ua);
+  if (isAndroid) {
+    const externalUrl = url.replace(/^https?:\/\//, '');
+    const intentUrl = `intent://${externalUrl}#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=${encodeURIComponent(url)};end`;
+    window.location.href = intentUrl;
+    return;
+  }
+
+  const opened = window.open(url, '_blank', 'noopener,noreferrer');
+  if (!opened) window.location.href = url;
 }
 function returnHomeFromLeetCode() {
   document.getElementById('leetcodeReturnBar').classList.remove('show');
