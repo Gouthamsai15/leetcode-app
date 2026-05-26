@@ -717,6 +717,16 @@ img{max-width:100%;display:block}
   color:var(--t4);
   margin-top:1px;
 }
+.leetcode-login-btn{
+  flex-shrink:0;
+  height:42px;
+  padding:0 12px;
+  border-radius:14px;
+  background:var(--green-light);
+  color:var(--green);
+  font-size:13px;
+  font-weight:900;
+}
 .leetcode-frame{
   position:absolute;
   top:68px;
@@ -1201,8 +1211,9 @@ img{max-width:100%;display:block}
     </button>
     <div class="leetcode-browser-title">
       <div class="leetcode-browser-name" id="leetcodeBrowserTitle">LeetCode</div>
-      <div class="leetcode-browser-sub">Back to CodeForge home</div>
+      <div class="leetcode-browser-sub">Use Login Mode if sign-in fails</div>
     </div>
+    <button class="leetcode-login-btn" onclick="openLeetCodeDirect()">Login Mode</button>
   </div>
   <iframe
     class="leetcode-frame"
@@ -2534,6 +2545,7 @@ function toggleFav(id) {
 // PROBLEM DETAIL MODAL
 // ═══════════════════════════════════════════════════════
 let currentModalId = null;
+let currentLeetCodeUrl = '';
 function openProblem(id) {
   currentModalId = id;
   const allProbs = CATEGORIES.flatMap(c=>c.problems);
@@ -2591,16 +2603,23 @@ function saveModalNotes() {
   saveState();
 }
 function openLeetCodeLink(url, title) {
+  currentLeetCodeUrl = url;
   document.getElementById('leetcodeBrowserTitle').textContent = title || 'LeetCode';
   document.getElementById('leetcodeFrame').src = url;
   document.getElementById('problemModal').classList.remove('open');
   document.getElementById('bottomNav').style.display = 'none';
   document.getElementById('leetcodeBrowser').classList.add('open');
 }
+function openLeetCodeDirect() {
+  if (!currentLeetCodeUrl) return;
+  showToast('Opening login mode. Use phone back to return.');
+  setTimeout(()=>{ window.location.href = currentLeetCodeUrl; },500);
+}
 function closeLeetCodeBrowser() {
   document.getElementById('leetcodeBrowser').classList.remove('open');
   document.getElementById('leetcodeFrame').src = 'about:blank';
   currentModalId = null;
+  currentLeetCodeUrl = '';
   showScreen('home');
 }
 function toggleSolved() {
