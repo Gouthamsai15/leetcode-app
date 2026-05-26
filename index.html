@@ -684,21 +684,20 @@ img{max-width:100%;display:block}
   box-shadow:var(--shadow-sm);
 }
 .leetcode-browser-back{
-  min-width:138px;
+  width:46px;
   height:46px;
-  padding:0 14px;
+  padding:0;
   border-radius:16px;
   background:var(--blue);
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:8px;
   color:white;
-  font-size:14px;
+  font-size:28px;
   font-weight:900;
+  line-height:1;
   box-shadow:0 6px 18px rgba(79,140,255,0.25);
 }
-.leetcode-browser-back svg{width:22px;height:22px;stroke:white}
 .leetcode-browser-title{
   min-width:0;
   flex:1;
@@ -1206,8 +1205,7 @@ img{max-width:100%;display:block}
 <div class="leetcode-browser" id="leetcodeBrowser">
   <div class="leetcode-browser-top">
     <button class="leetcode-browser-back" onclick="closeLeetCodeBrowser()" aria-label="Back to CodeForge home">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      Back Home
+      &lt;
     </button>
     <div class="leetcode-browser-title">
       <div class="leetcode-browser-name" id="leetcodeBrowserTitle">LeetCode</div>
