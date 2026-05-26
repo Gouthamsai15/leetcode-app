@@ -651,55 +651,68 @@ img{max-width:100%;display:block}
 }
 .modal-sheet::-webkit-scrollbar{display:none}
 .modal-overlay.open .modal-sheet{transform:translateY(0)}
-.leetcode-return-bar{
+.leetcode-browser{
   position:fixed;
-  top:12px;
-  left:50%;
-  transform:translate(-50%,-120%);
-  width:calc(100% - 24px);
-  max-width:406px;
-  z-index:300;
+  inset:0;
+  left:0;
+  right:0;
+  max-width:430px;
+  margin:0 auto;
+  z-index:500;
+  display:flex;
+  flex-direction:column;
+  background:var(--bg2);
+  transform:translateX(100%);
+  transition:transform 0.28s ease;
+}
+.leetcode-browser.open{transform:translateX(0)}
+.leetcode-browser-top{
+  flex-shrink:0;
+  height:58px;
+  padding:8px 12px;
+  padding-top:max(8px,env(safe-area-inset-top));
   display:flex;
   align-items:center;
-  justify-content:space-between;
   gap:12px;
-  padding:10px 12px;
-  border-radius:18px;
-  background:rgba(255,255,255,0.96);
-  box-shadow:var(--shadow-lg);
-  border:1px solid var(--border);
-  opacity:0;
-  pointer-events:none;
-  transition:opacity 0.25s ease,transform 0.25s ease;
+  border-bottom:1px solid var(--border);
+  background:var(--bg2);
+  box-shadow:var(--shadow-sm);
 }
-.leetcode-return-bar.show{
-  opacity:1;
-  pointer-events:all;
-  transform:translate(-50%,0);
+.leetcode-browser-back{
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  background:var(--blue);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 6px 18px rgba(79,140,255,0.25);
 }
-.leetcode-return-text{
+.leetcode-browser-back svg{width:22px;height:22px;stroke:white}
+.leetcode-browser-title{
   min-width:0;
-  font-size:12px;
-  font-weight:800;
-  color:var(--t3);
+  flex:1;
+}
+.leetcode-browser-name{
+  font-size:14px;
+  font-weight:900;
+  color:var(--t1);
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
 }
-.leetcode-home-btn{
-  flex-shrink:0;
-  display:flex;
-  align-items:center;
-  gap:6px;
-  padding:9px 12px;
-  border-radius:12px;
-  background:var(--blue);
-  color:white;
-  font-size:13px;
-  font-weight:900;
-  box-shadow:0 6px 18px rgba(79,140,255,0.25);
+.leetcode-browser-sub{
+  font-size:11px;
+  font-weight:800;
+  color:var(--t4);
+  margin-top:1px;
 }
-.leetcode-home-btn svg{width:16px;height:16px;stroke:white}
+.leetcode-frame{
+  flex:1;
+  width:100%;
+  border:0;
+  background:white;
+}
 .modal-handle{
   width:40px;height:4px;border-radius:10px;
   background:var(--border);margin:12px auto 20px;
@@ -1165,12 +1178,17 @@ img{max-width:100%;display:block}
 </style>
 </head>
 <body>
-<div class="leetcode-return-bar" id="leetcodeReturnBar">
-  <div class="leetcode-return-text" id="leetcodeReturnText">LeetCode opened</div>
-  <button class="leetcode-home-btn" onclick="returnHomeFromLeetCode()">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
-    Home
-  </button>
+<div class="leetcode-browser" id="leetcodeBrowser">
+  <div class="leetcode-browser-top">
+    <button class="leetcode-browser-back" onclick="closeLeetCodeBrowser()" aria-label="Back to CodeForge home">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="leetcode-browser-title">
+      <div class="leetcode-browser-name" id="leetcodeBrowserTitle">LeetCode</div>
+      <div class="leetcode-browser-sub">Back to CodeForge home</div>
+    </div>
+  </div>
+  <iframe class="leetcode-frame" id="leetcodeFrame" title="LeetCode problem"></iframe>
 </div>
 
 <!-- ══════════════ SPLASH SCREEN ══════════════ -->
@@ -2552,26 +2570,16 @@ function saveModalNotes() {
   saveState();
 }
 function openLeetCodeLink(url, title) {
-  const bar = document.getElementById('leetcodeReturnBar');
-  const text = document.getElementById('leetcodeReturnText');
-  if(text) text.textContent = `Opened: ${title}`;
-  if(bar) bar.classList.add('show');
-
-  const ua = navigator.userAgent || '';
-  const isAndroid = /Android/i.test(ua);
-  if (isAndroid) {
-    const externalUrl = url.replace(/^https?:\/\//, '');
-    const intentUrl = `intent://${externalUrl}#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=${encodeURIComponent(url)};end`;
-    window.location.href = intentUrl;
-    return;
-  }
-
-  const opened = window.open(url, '_blank', 'noopener,noreferrer');
-  if (!opened) window.location.href = url;
+  document.getElementById('leetcodeBrowserTitle').textContent = title || 'LeetCode';
+  document.getElementById('leetcodeFrame').src = url;
+  document.getElementById('problemModal').classList.remove('open');
+  document.getElementById('bottomNav').style.display = 'none';
+  document.getElementById('leetcodeBrowser').classList.add('open');
 }
-function returnHomeFromLeetCode() {
-  document.getElementById('leetcodeReturnBar').classList.remove('show');
-  closeProblemModal();
+function closeLeetCodeBrowser() {
+  document.getElementById('leetcodeBrowser').classList.remove('open');
+  document.getElementById('leetcodeFrame').src = 'about:blank';
+  currentModalId = null;
   showScreen('home');
 }
 function toggleSolved() {
