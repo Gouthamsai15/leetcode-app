@@ -651,6 +651,55 @@ img{max-width:100%;display:block}
 }
 .modal-sheet::-webkit-scrollbar{display:none}
 .modal-overlay.open .modal-sheet{transform:translateY(0)}
+.leetcode-return-bar{
+  position:fixed;
+  top:12px;
+  left:50%;
+  transform:translate(-50%,-120%);
+  width:calc(100% - 24px);
+  max-width:406px;
+  z-index:300;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 12px;
+  border-radius:18px;
+  background:rgba(255,255,255,0.96);
+  box-shadow:var(--shadow-lg);
+  border:1px solid var(--border);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.25s ease,transform 0.25s ease;
+}
+.leetcode-return-bar.show{
+  opacity:1;
+  pointer-events:all;
+  transform:translate(-50%,0);
+}
+.leetcode-return-text{
+  min-width:0;
+  font-size:12px;
+  font-weight:800;
+  color:var(--t3);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.leetcode-home-btn{
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:9px 12px;
+  border-radius:12px;
+  background:var(--blue);
+  color:white;
+  font-size:13px;
+  font-weight:900;
+  box-shadow:0 6px 18px rgba(79,140,255,0.25);
+}
+.leetcode-home-btn svg{width:16px;height:16px;stroke:white}
 .modal-handle{
   width:40px;height:4px;border-radius:10px;
   background:var(--border);margin:12px auto 20px;
@@ -1116,6 +1165,13 @@ img{max-width:100%;display:block}
 </style>
 </head>
 <body>
+<div class="leetcode-return-bar" id="leetcodeReturnBar">
+  <div class="leetcode-return-text" id="leetcodeReturnText">LeetCode opened</div>
+  <button class="leetcode-home-btn" onclick="returnHomeFromLeetCode()">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+    Home
+  </button>
+</div>
 
 <!-- ══════════════ SPLASH SCREEN ══════════════ -->
 <div id="splash" class="screen active" style="display:flex">
@@ -2478,7 +2534,7 @@ function openProblem(id) {
     hist.innerHTML = '<div style="font-size:13px;color:var(--t4);font-weight:600;padding:8px 0">Not solved yet</div>';
   }
   // LC button
-  document.getElementById('openLcBtn').onclick = ()=>{ window.open(p.lc,'_blank'); };
+  document.getElementById('openLcBtn').onclick = ()=>openLeetCodeLink(p.lc, p.n);
   document.getElementById('problemModal').classList.add('open');
 }
 function closeModal(e) {
@@ -2494,6 +2550,18 @@ function saveModalNotes() {
   if(!currentModalId) return;
   initProblemState(currentModalId).notes = document.getElementById('modalNotes').value;
   saveState();
+}
+function openLeetCodeLink(url, title) {
+  const bar = document.getElementById('leetcodeReturnBar');
+  const text = document.getElementById('leetcodeReturnText');
+  if(text) text.textContent = `Opened: ${title}`;
+  if(bar) bar.classList.add('show');
+  window.open(url, '_blank');
+}
+function returnHomeFromLeetCode() {
+  document.getElementById('leetcodeReturnBar').classList.remove('show');
+  closeProblemModal();
+  showScreen('home');
 }
 function toggleSolved() {
   if(!currentModalId) return;
