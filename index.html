@@ -2570,11 +2570,20 @@ function saveModalNotes() {
   saveState();
 }
 function openLeetCodeLink(url, title) {
-  document.getElementById('leetcodeBrowserTitle').textContent = title || 'LeetCode';
-  document.getElementById('leetcodeFrame').src = url;
   document.getElementById('problemModal').classList.remove('open');
-  document.getElementById('bottomNav').style.display = 'none';
-  document.getElementById('leetcodeBrowser').classList.add('open');
+  currentModalId = null;
+  showScreen('home');
+
+  const ua = navigator.userAgent || '';
+  const isAndroid = /Android/i.test(ua);
+  if (isAndroid) {
+    showToast('Use your phone back button to return to CodeForge');
+    setTimeout(()=>{ window.location.href = url; },500);
+    return;
+  }
+
+  const opened = window.open(url, '_blank', 'noopener,noreferrer');
+  if (!opened) window.location.href = url;
 }
 function closeLeetCodeBrowser() {
   document.getElementById('leetcodeBrowser').classList.remove('open');
