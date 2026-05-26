@@ -1,0 +1,3102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>CodeForge — Master DSA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════
+   CSS VARIABLES & RESET
+═══════════════════════════════════════════════════════ */
+:root {
+  --bg: #F5F7FB;
+  --bg2: #FFFFFF;
+  --card: rgba(255,255,255,0.92);
+  --blue: #4F8CFF;
+  --blue-light: #EEF4FF;
+  --purple: #8B5CF6;
+  --purple-light: #F3EEFF;
+  --green: #22C55E;
+  --green-light: #EDFDF5;
+  --orange: #FB923C;
+  --orange-light: #FFF4ED;
+  --pink: #FF5EA8;
+  --pink-light: #FFF0F7;
+  --red: #EF4444;
+  --yellow: #F59E0B;
+  --t1: #111827;
+  --t2: #374151;
+  --t3: #6B7280;
+  --t4: #9CA3AF;
+  --border: rgba(0,0,0,0.07);
+  --shadow-sm: 0 1px 8px rgba(0,0,0,0.06);
+  --shadow: 0 4px 20px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
+  --radius: 18px;
+  --radius-sm: 12px;
+  --radius-xs: 8px;
+  --font: 'Nunito', sans-serif;
+  --font2: 'Space Grotesk', sans-serif;
+  --nav-h: 76px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:16px;scroll-behavior:smooth}
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--t1);
+  min-height:100vh;
+  max-width:430px;
+  margin:0 auto;
+  overflow-x:hidden;
+  position:relative;
+}
+button{border:none;background:none;cursor:pointer;font-family:inherit}
+input,textarea{font-family:inherit;border:none;outline:none;background:none}
+ul{list-style:none}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+
+/* ═══════════════════════════════════════════════════════
+   SCREEN SYSTEM
+═══════════════════════════════════════════════════════ */
+.screen{
+  position:fixed;
+  inset:0;
+  max-width:430px;
+  margin:0 auto;
+  display:none;
+  flex-direction:column;
+  background:var(--bg);
+  overflow:hidden;
+  transition:opacity 0.3s ease,transform 0.3s ease;
+  opacity:0;
+  transform:translateX(20px);
+}
+.screen.active{
+  display:flex;
+  opacity:1;
+  transform:translateX(0);
+}
+.screen-body{
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding-bottom:calc(var(--nav-h) + 16px);
+  -webkit-overflow-scrolling:touch;
+}
+.screen-body::-webkit-scrollbar{display:none}
+
+/* ═══════════════════════════════════════════════════════
+   SPLASH SCREEN
+═══════════════════════════════════════════════════════ */
+#splash{
+  background:linear-gradient(145deg,#f0f4ff 0%,#fdf0ff 50%,#f0fff8 100%);
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:0;
+}
+.splash-blobs{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(60px);animation:blobFloat 6s ease-in-out infinite alternate}
+.blob1{width:200px;height:200px;background:rgba(79,140,255,0.18);top:-40px;left:-40px;animation-delay:0s}
+.blob2{width:160px;height:160px;background:rgba(139,92,246,0.15);top:30%;right:-30px;animation-delay:2s}
+.blob3{width:180px;height:180px;background:rgba(34,197,94,0.12);bottom:15%;left:20%;animation-delay:4s}
+.blob4{width:120px;height:120px;background:rgba(255,94,168,0.12);bottom:-20px;right:10%;animation-delay:1s}
+@keyframes blobFloat{0%{transform:translateY(0) scale(1)}100%{transform:translateY(-20px) scale(1.1)}}
+
+.splash-content{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;gap:0}
+.splash-logo-wrap{
+  width:96px;height:96px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  border-radius:28px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 20px 60px rgba(79,140,255,0.35);
+  margin-bottom:24px;
+  animation:logoPop 0.8s cubic-bezier(0.175,0.885,0.32,1.275) 0.3s both;
+}
+@keyframes logoPop{0%{opacity:0;transform:scale(0.3) rotate(-20deg)}100%{opacity:1;transform:scale(1) rotate(0deg)}}
+.splash-logo-wrap svg{width:52px;height:52px}
+.splash-title{
+  font-family:var(--font2);
+  font-size:36px;font-weight:700;
+  color:var(--t1);
+  letter-spacing:-1px;
+  animation:fadeUp 0.6s ease 0.8s both;
+}
+.splash-title span{color:var(--blue)}
+.splash-tagline{
+  font-size:15px;color:var(--t3);font-weight:600;
+  margin-top:10px;line-height:1.5;
+  animation:fadeUp 0.6s ease 1s both;
+}
+.splash-illustration{
+  width:260px;height:220px;margin:32px 0;
+  position:relative;
+  animation:fadeUp 0.6s ease 1.1s both;
+}
+.splash-coder{
+  width:100%;height:100%;
+  background:linear-gradient(135deg,var(--blue-light),var(--purple-light));
+  border-radius:24px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.splash-coder::before{
+  content:'';position:absolute;
+  width:300px;height:300px;
+  background:radial-gradient(circle,rgba(79,140,255,0.1) 0%,transparent 70%);
+  border-radius:50%;
+}
+.code-symbols{position:absolute;font-size:18px;opacity:0.2;animation:floatCode 4s ease-in-out infinite}
+.cs1{top:15%;left:10%;animation-delay:0s}
+.cs2{top:20%;right:15%;animation-delay:1s}
+.cs3{bottom:25%;left:15%;animation-delay:2s}
+.cs4{bottom:20%;right:10%;animation-delay:0.5s}
+@keyframes floatCode{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.coder-avatar{
+  width:120px;height:120px;
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:1;
+  box-shadow:0 10px 30px rgba(102,126,234,0.4);
+  overflow:hidden;
+}
+.coder-avatar svg{width:80px;height:80px;fill:white;opacity:0.9}
+.splash-progress{
+  width:240px;
+  animation:fadeUp 0.6s ease 1.3s both;
+}
+.splash-progress-label{font-size:13px;color:var(--t3);font-weight:600;margin-bottom:8px}
+.splash-bar{height:4px;background:rgba(0,0,0,0.08);border-radius:10px;overflow:hidden}
+.splash-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--blue),var(--purple));
+  border-radius:10px;
+  width:0%;
+  transition:width 2s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
+
+/* ═══════════════════════════════════════════════════════
+   BOTTOM NAVIGATION
+═══════════════════════════════════════════════════════ */
+.bottom-nav{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  max-width:430px;
+  margin:0 auto;
+  height:var(--nav-h);
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  padding:0 8px 8px;
+  z-index:100;
+  box-shadow:0 -4px 30px rgba(0,0,0,0.08);
+}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 12px;
+  border-radius:16px;
+  transition:all 0.25s ease;
+  position:relative;
+  cursor:pointer;
+  flex:1;
+}
+.nav-item .nav-icon{
+  width:26px;height:26px;display:flex;align-items:center;justify-content:center;
+  transition:all 0.25s ease;
+}
+.nav-item .nav-label{
+  font-size:10px;font-weight:700;
+  color:var(--t4);
+  transition:color 0.25s ease;
+  letter-spacing:0.3px;
+}
+.nav-item.active .nav-label{color:var(--blue)}
+.nav-item.active .nav-icon{color:var(--blue)}
+.nav-item svg{transition:all 0.25s ease}
+.nav-item.active svg{stroke:var(--blue)}
+.nav-item:not(.active) svg{stroke:var(--t4)}
+.nav-center-btn{
+  width:56px;height:56px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px rgba(79,140,255,0.4);
+  margin-top:-20px;
+  flex-shrink:0;
+  cursor:pointer;
+  transition:transform 0.2s ease,box-shadow 0.2s ease;
+}
+.nav-center-btn:active{transform:scale(0.93);box-shadow:0 4px 12px rgba(79,140,255,0.3)}
+.nav-active-dot{
+  width:4px;height:4px;
+  background:var(--blue);
+  border-radius:50%;
+  position:absolute;
+  bottom:2px;
+  display:none;
+}
+.nav-item.active .nav-active-dot{display:block}
+
+/* ═══════════════════════════════════════════════════════
+   SHARED COMPONENTS
+═══════════════════════════════════════════════════════ */
+.screen-header{
+  padding:52px 20px 16px;
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+}
+.header-row{display:flex;align-items:center;justify-content:space-between}
+.screen-title{font-family:var(--font2);font-size:24px;font-weight:700;color:var(--t1);letter-spacing:-0.5px}
+
+.card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:18px;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+}
+.card-sm{
+  background:var(--card);
+  border-radius:var(--radius-sm);
+  padding:14px;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-sm);
+}
+.gradient-card{
+  border-radius:var(--radius);
+  padding:20px;
+  border:none;
+  position:relative;
+  overflow:hidden;
+}
+.gradient-blue{background:linear-gradient(135deg,var(--blue) 0%,#6B7AFF 100%)}
+.gradient-purple{background:linear-gradient(135deg,var(--purple) 0%,#A78BFA 100%)}
+.gradient-green{background:linear-gradient(135deg,var(--green) 0%,#4ADE80 100%)}
+.gradient-pink{background:linear-gradient(135deg,var(--pink) 0%,#F472B6 100%)}
+.gradient-orange{background:linear-gradient(135deg,var(--orange) 0%,#FBBF24 100%)}
+
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 10px;border-radius:20px;
+  font-size:11px;font-weight:700;
+}
+.badge-easy{background:var(--green-light);color:var(--green)}
+.badge-medium{background:var(--orange-light);color:var(--orange)}
+.badge-hard{background:#FEF2F2;color:var(--red)}
+.badge-blue{background:var(--blue-light);color:var(--blue)}
+.badge-purple{background:var(--purple-light);color:var(--purple)}
+
+.section-title{
+  font-family:var(--font2);
+  font-size:18px;font-weight:700;color:var(--t1);
+  margin-bottom:14px;
+  letter-spacing:-0.3px;
+}
+.section-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.see-all{font-size:13px;font-weight:700;color:var(--blue)}
+
+/* Progress bar */
+.progress-bar-wrap{height:8px;background:rgba(0,0,0,0.06);border-radius:10px;overflow:hidden}
+.progress-bar-fill{height:100%;border-radius:10px;transition:width 1s ease}
+.progress-bar-blue{background:linear-gradient(90deg,var(--blue),#818CF8)}
+.progress-bar-green{background:linear-gradient(90deg,var(--green),#4ADE80)}
+.progress-bar-purple{background:linear-gradient(90deg,var(--purple),#A78BFA)}
+.progress-bar-orange{background:linear-gradient(90deg,var(--orange),#FBBF24)}
+.progress-bar-pink{background:linear-gradient(90deg,var(--pink),#F472B6)}
+
+/* Circular progress */
+.ring-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.ring-svg{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:rgba(0,0,0,0.06)}
+.ring-fill{fill:none;stroke-linecap:round;transition:stroke-dashoffset 1.5s ease}
+.ring-label{position:absolute;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+
+/* Toggle switch */
+.toggle{position:relative;width:46px;height:26px}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{
+  position:absolute;inset:0;
+  background:#E5E7EB;border-radius:30px;
+  transition:0.3s;cursor:pointer;
+}
+.toggle-slider::before{
+  content:'';position:absolute;
+  width:20px;height:20px;
+  left:3px;top:3px;
+  background:white;border-radius:50%;
+  transition:0.3s;
+  box-shadow:0 2px 4px rgba(0,0,0,0.15);
+}
+.toggle input:checked + .toggle-slider{background:var(--blue)}
+.toggle input:checked + .toggle-slider::before{transform:translateX(20px)}
+
+/* Checkbox */
+.check-circle{
+  width:26px;height:26px;border-radius:50%;
+  border:2.5px solid #E5E7EB;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.25s ease;
+  flex-shrink:0;
+}
+.check-circle.checked{
+  background:var(--green);
+  border-color:var(--green);
+}
+.check-circle svg{width:14px;height:14px;stroke:white;opacity:0}
+.check-circle.checked svg{opacity:1}
+
+/* Icon buttons */
+.icon-btn{
+  width:38px;height:38px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg);
+  transition:all 0.2s ease;
+  cursor:pointer;
+}
+.icon-btn:active{transform:scale(0.93)}
+.icon-btn svg{width:20px;height:20px;stroke:var(--t3)}
+
+/* Chip/pill */
+.chip{
+  padding:6px 14px;border-radius:20px;
+  font-size:12px;font-weight:700;
+  background:var(--bg);
+  color:var(--t3);
+  cursor:pointer;
+  transition:all 0.2s ease;
+  border:1.5px solid transparent;
+  white-space:nowrap;
+}
+.chip.active{background:var(--blue);color:white;border-color:transparent}
+.chip:active{transform:scale(0.96)}
+
+/* ═══════════════════════════════════════════════════════
+   HOME SCREEN
+═══════════════════════════════════════════════════════ */
+#home .screen-body{padding-top:0}
+.home-top{
+  background:linear-gradient(160deg,#EEF4FF 0%,#F3EEFF 100%);
+  padding:52px 20px 24px;
+  position:relative;overflow:hidden;
+}
+.home-top::after{
+  content:'';position:absolute;
+  width:200px;height:200px;
+  background:radial-gradient(circle,rgba(79,140,255,0.15) 0%,transparent 70%);
+  top:-50px;right:-50px;border-radius:50%;pointer-events:none;
+}
+.greeting-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.greeting-text{}
+.greeting-sub{font-size:13px;color:var(--t3);font-weight:600}
+.greeting-name{font-family:var(--font2);font-size:24px;font-weight:700;color:var(--t1);letter-spacing:-0.5px;margin-top:2px}
+.avatar{
+  width:48px;height:48px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;font-weight:800;color:white;
+  box-shadow:0 4px 12px rgba(79,140,255,0.35);
+  cursor:pointer;
+}
+
+.home-hero-row{display:flex;gap:14px;align-items:stretch}
+.hero-ring-card{
+  flex:1;
+  background:white;
+  border-radius:var(--radius);
+  padding:18px;
+  box-shadow:var(--shadow);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  border:1px solid var(--border);
+}
+.ring-stat-label{font-size:11px;font-weight:700;color:var(--t3);letter-spacing:0.5px;text-transform:uppercase}
+.ring-stat-val{font-family:var(--font2);font-size:28px;font-weight:700;color:var(--t1)}
+.ring-stat-sub{font-size:12px;color:var(--t3);font-weight:600}
+
+.streak-card{
+  flex:0 0 120px;
+  background:linear-gradient(145deg,#FF6B6B,#FF8E53);
+  border-radius:var(--radius);
+  padding:16px 14px;
+  display:flex;flex-direction:column;gap:6px;
+  box-shadow:0 8px 24px rgba(255,107,107,0.35);
+}
+.streak-fire{font-size:28px;line-height:1}
+.streak-val{font-family:var(--font2);font-size:30px;font-weight:800;color:white;letter-spacing:-1px}
+.streak-label{font-size:11px;font-weight:700;color:rgba(255,255,255,0.85)}
+.streak-best{font-size:10px;color:rgba(255,255,255,0.7);font-weight:600}
+
+.home-section{padding:20px 20px 0}
+
+/* XP Card */
+.xp-card{
+  background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+  border-radius:var(--radius);
+  padding:18px 20px;
+  position:relative;overflow:hidden;
+  box-shadow:0 8px 24px rgba(102,126,234,0.35);
+}
+.xp-card::before{
+  content:'';position:absolute;
+  width:150px;height:150px;
+  background:rgba(255,255,255,0.08);
+  border-radius:50%;
+  top:-40px;right:-20px;
+}
+.xp-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.xp-level{display:flex;align-items:center;gap:10px}
+.xp-badge{
+  width:40px;height:40px;border-radius:12px;
+  background:rgba(255,255,255,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+}
+.xp-level-text .level-name{font-size:11px;color:rgba(255,255,255,0.7);font-weight:600}
+.xp-level-text .level-num{font-family:var(--font2);font-size:18px;font-weight:700;color:white}
+.xp-pts{font-family:var(--font2);font-size:22px;font-weight:700;color:white}
+.xp-pts span{font-size:12px;font-weight:600;color:rgba(255,255,255,0.7)}
+.xp-bar-wrap{height:6px;background:rgba(255,255,255,0.2);border-radius:10px;overflow:hidden}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,#FFD700,#FFB830);border-radius:10px;transition:width 1.5s ease}
+
+/* Stats row */
+.stats-row{display:flex;gap:10px;padding:16px 20px 0}
+.stat-box{
+  flex:1;background:white;border-radius:var(--radius-sm);
+  padding:14px 10px;text-align:center;
+  border:1px solid var(--border);box-shadow:var(--shadow-sm);
+}
+.stat-box-val{font-family:var(--font2);font-size:22px;font-weight:700;color:var(--t1)}
+.stat-box-label{font-size:10px;color:var(--t3);font-weight:700;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px}
+.stat-box-icon{font-size:16px;margin-bottom:4px}
+
+/* Daily target */
+.daily-target-card{
+  background:white;border-radius:var(--radius);
+  padding:18px;border:1px solid var(--border);box-shadow:var(--shadow-sm);
+}
+.target-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.target-label{font-family:var(--font2);font-size:15px;font-weight:700;color:var(--t1)}
+.target-val{font-family:var(--font2);font-size:15px;font-weight:700;color:var(--blue)}
+
+/* Weekly chart */
+.chart-card{background:white;border-radius:var(--radius);padding:18px;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:80px;margin-top:16px}
+.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.chart-bar-wrap{flex:1;width:100%;display:flex;align-items:flex-end;justify-content:center}
+.chart-bar{
+  width:100%;max-width:28px;
+  border-radius:6px 6px 0 0;
+  transition:height 1s ease;
+  min-height:4px;
+  position:relative;
+}
+.chart-bar.active{box-shadow:0 4px 12px rgba(79,140,255,0.4)}
+.chart-day{font-size:10px;font-weight:700;color:var(--t4)}
+.chart-row-top{display:flex;align-items:center;justify-content:space-between}
+.chart-solved{font-family:var(--font2);font-size:20px;font-weight:700;color:var(--t1)}
+.chart-solved span{font-size:12px;color:var(--t3);font-weight:600}
+
+/* Quote card */
+.quote-card{
+  background:linear-gradient(135deg,var(--blue) 0%,var(--purple) 100%);
+  border-radius:var(--radius);padding:20px;
+  position:relative;overflow:hidden;
+}
+.quote-card::before,.quote-card::after{
+  content:'"';
+  position:absolute;font-size:100px;font-weight:900;
+  color:rgba(255,255,255,0.08);line-height:1;font-family:Georgia,serif;
+}
+.quote-card::before{top:-10px;left:10px}
+.quote-card::after{bottom:-30px;right:10px}
+.quote-text{font-size:14px;color:white;font-weight:600;line-height:1.6;position:relative;z-index:1}
+.quote-author{font-size:12px;color:rgba(255,255,255,0.7);font-weight:700;margin-top:10px;position:relative;z-index:1}
+
+/* Recently solved */
+.recent-card{
+  background:white;border-radius:var(--radius-sm);
+  padding:14px;border:1px solid var(--border);
+  box-shadow:var(--shadow-sm);
+  display:flex;align-items:center;gap:12px;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  margin-bottom:8px;
+}
+.recent-card:active{transform:scale(0.98);box-shadow:none}
+.recent-icon{
+  width:38px;height:38px;border-radius:12px;
+  background:var(--green-light);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.recent-info{flex:1;min-width:0}
+.recent-name{font-size:14px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recent-meta{font-size:12px;color:var(--t3);margin-top:2px;font-weight:600}
+.recent-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.recent-time{font-size:11px;color:var(--t4);font-weight:600}
+
+/* Category overview */
+.cat-progress-item{margin-bottom:14px}
+.cat-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.cat-name{font-size:13px;font-weight:700;color:var(--t2)}
+.cat-count{font-size:12px;font-weight:700;color:var(--t3)}
+
+/* ═══════════════════════════════════════════════════════
+   PROBLEMS SCREEN
+═══════════════════════════════════════════════════════ */
+#problems .screen-header{padding-bottom:0}
+.search-bar{
+  display:flex;align-items:center;gap:10px;
+  background:var(--bg);border-radius:var(--radius-sm);
+  padding:10px 14px;margin-top:12px;
+  border:1.5px solid var(--border);
+}
+.search-bar svg{width:18px;height:18px;stroke:var(--t4);flex-shrink:0}
+.search-bar input{flex:1;font-size:14px;font-weight:600;color:var(--t1);background:none}
+.search-bar input::placeholder{color:var(--t4)}
+.filter-chips{
+  display:flex;gap:8px;
+  overflow-x:auto;padding:12px 20px;
+  scrollbar-width:none;
+}
+.filter-chips::-webkit-scrollbar{display:none}
+
+.problems-list{padding:0 20px 20px}
+.category-section{margin-bottom:4px}
+.category-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 0 10px;cursor:pointer;
+}
+.category-header-left{display:flex;align-items:center;gap:10px}
+.cat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cat-header-name{font-family:var(--font2);font-size:15px;font-weight:700;color:var(--t1)}
+.cat-header-sub{font-size:12px;color:var(--t3);font-weight:600}
+.cat-chevron{transition:transform 0.3s ease}
+.cat-chevron.open{transform:rotate(180deg)}
+.cat-problems{display:flex;flex-direction:column;gap:8px;overflow:hidden;transition:all 0.3s ease}
+.cat-problems.collapsed{display:none}
+
+.problem-card{
+  background:white;border-radius:var(--radius-sm);
+  padding:14px;border:1px solid var(--border);
+  box-shadow:var(--shadow-sm);
+  display:flex;align-items:center;gap:12px;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  position:relative;
+  overflow:hidden;
+}
+.problem-card.solved::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:3px;background:var(--green);border-radius:3px 0 0 3px;
+}
+.problem-card:active{transform:scale(0.98);box-shadow:none}
+.problem-info{flex:1;min-width:0}
+.problem-num{font-size:11px;font-weight:700;color:var(--t4)}
+.problem-name{font-size:14px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.problem-meta{display:flex;align-items:center;gap:6px;margin-top:6px}
+.problem-date{font-size:11px;color:var(--t4);font-weight:600}
+.problem-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.fav-btn{
+  width:32px;height:32px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.2s ease;
+}
+.fav-btn svg{width:16px;height:16px;stroke:var(--t4);transition:all 0.2s ease}
+.fav-btn.active svg{stroke:var(--yellow);fill:var(--yellow)}
+.notes-btn{
+  width:32px;height:32px;border-radius:10px;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+}
+.notes-btn svg{width:16px;height:16px;stroke:var(--t3)}
+
+/* ═══════════════════════════════════════════════════════
+   PROBLEM DETAIL MODAL
+═══════════════════════════════════════════════════════ */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.4);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  z-index:200;
+  display:flex;align-items:flex-end;
+  justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.3s ease;
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-sheet{
+  background:var(--bg2);
+  border-radius:28px 28px 0 0;
+  width:100%;max-width:430px;
+  max-height:92vh;
+  overflow-y:auto;
+  transform:translateY(100%);
+  transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  padding-bottom:32px;
+}
+.modal-sheet::-webkit-scrollbar{display:none}
+.modal-overlay.open .modal-sheet{transform:translateY(0)}
+.modal-handle{
+  width:40px;height:4px;border-radius:10px;
+  background:var(--border);margin:12px auto 20px;
+}
+.modal-header{padding:0 20px 16px;border-bottom:1px solid var(--border)}
+.modal-top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.modal-back{width:36px;height:36px;border-radius:12px;background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.modal-back svg{width:20px;height:20px;stroke:var(--t2)}
+.modal-actions-row{display:flex;gap:8px}
+.modal-problem-num{font-size:13px;font-weight:700;color:var(--t4)}
+.modal-problem-title{font-family:var(--font2);font-size:22px;font-weight:700;color:var(--t1);letter-spacing:-0.5px;margin-bottom:10px}
+.modal-tags{display:flex;flex-wrap:wrap;gap:6px}
+.modal-body{padding:20px}
+.modal-section{margin-bottom:22px}
+.modal-section-label{font-family:var(--font2);font-size:14px;font-weight:700;color:var(--t2);margin-bottom:10px}
+.modal-desc{font-size:14px;color:var(--t2);line-height:1.7;font-weight:500}
+.read-more{color:var(--blue);font-weight:700;font-size:14px}
+.notes-input{
+  width:100%;min-height:100px;
+  background:var(--bg);border-radius:var(--radius-sm);
+  padding:14px;font-size:14px;color:var(--t1);font-weight:500;
+  resize:none;line-height:1.6;
+  border:1.5px solid transparent;transition:border-color 0.2s ease;
+}
+.notes-input:focus{border-color:var(--blue)}
+.modal-toggle-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 0;border-bottom:1px solid var(--border);
+}
+.modal-toggle-row:last-child{border:none}
+.modal-toggle-label{display:flex;align-items:center;gap:10px}
+.modal-toggle-label svg{width:20px;height:20px;stroke:var(--t3)}
+.modal-toggle-label span{font-size:14px;font-weight:700;color:var(--t1)}
+.modal-toggle-meta{font-size:12px;color:var(--t3);font-weight:600;margin-top:2px}
+
+.solve-history-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;border-bottom:1px solid var(--border);
+}
+.solve-history-item:last-child{border:none}
+.solve-h-date{font-size:13px;font-weight:700;color:var(--t2)}
+.solve-h-time{font-size:12px;color:var(--t4);font-weight:600}
+
+.open-lc-btn{
+  width:100%;padding:16px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  border-radius:var(--radius-sm);
+  color:white;font-size:15px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 8px 24px rgba(79,140,255,0.35);
+  transition:all 0.2s ease;
+  letter-spacing:0.3px;
+}
+.open-lc-btn:active{transform:scale(0.97);box-shadow:0 4px 12px rgba(79,140,255,0.25)}
+.open-lc-btn svg{width:18px;height:18px;stroke:white}
+
+/* ═══════════════════════════════════════════════════════
+   STATISTICS SCREEN
+═══════════════════════════════════════════════════════ */
+.stats-body{padding:20px}
+.heatmap-card{background:white;border-radius:var(--radius);padding:18px;border:1px solid var(--border);box-shadow:var(--shadow-sm);margin-bottom:16px}
+.heatmap-grid{display:flex;gap:3px;flex-wrap:wrap;margin-top:14px}
+.heatmap-cell{
+  width:14px;height:14px;border-radius:3px;
+  background:rgba(0,0,0,0.05);
+  transition:all 0.2s ease;
+  cursor:pointer;
+}
+.heatmap-cell.level-1{background:rgba(79,140,255,0.2)}
+.heatmap-cell.level-2{background:rgba(79,140,255,0.45)}
+.heatmap-cell.level-3{background:rgba(79,140,255,0.7)}
+.heatmap-cell.level-4{background:var(--blue)}
+.heatmap-legend{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:11px;color:var(--t4);font-weight:600}
+.legend-cells{display:flex;gap:3px}
+
+.time-tabs{display:flex;background:var(--bg);border-radius:var(--radius-sm);padding:4px;margin-bottom:16px}
+.time-tab{flex:1;padding:8px;border-radius:10px;font-size:13px;font-weight:700;color:var(--t3);text-align:center;cursor:pointer;transition:all 0.2s ease}
+.time-tab.active{background:white;color:var(--blue);box-shadow:var(--shadow-sm)}
+
+.stats-bar-chart{height:120px;display:flex;align-items:flex-end;gap:8px;margin:16px 0 8px}
+.stats-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.stats-bar{
+  width:100%;border-radius:6px 6px 0 0;
+  background:linear-gradient(180deg,var(--blue),rgba(79,140,255,0.4));
+  min-height:4px;transition:height 1s ease;
+  position:relative;
+}
+.stats-bar.highlight{background:linear-gradient(180deg,var(--blue),var(--blue))}
+.stats-bar-day{font-size:10px;color:var(--t4);font-weight:700}
+
+/* Donut chart */
+.donut-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.donut-center{position:absolute;text-align:center}
+.donut-num{font-family:var(--font2);font-size:24px;font-weight:700;color:var(--t1)}
+.donut-label{font-size:11px;color:var(--t3);font-weight:700}
+
+.diff-legend{display:flex;flex-direction:column;gap:8px;flex:1}
+.diff-legend-item{display:flex;align-items:center;gap:8px}
+.diff-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.diff-name{font-size:13px;font-weight:700;color:var(--t2)}
+.diff-val{font-size:12px;color:var(--t3);font-weight:600;margin-left:auto}
+
+.topic-progress-list{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.topic-row{display:flex;align-items:center;gap:12px}
+.topic-name{font-size:13px;font-weight:700;color:var(--t2);width:130px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topic-bar-wrap{flex:1;height:6px;background:rgba(0,0,0,0.06);border-radius:10px;overflow:hidden}
+.topic-bar-fill{height:100%;border-radius:10px}
+.topic-count{font-size:12px;font-weight:700;color:var(--t3);width:40px;text-align:right;flex-shrink:0}
+
+/* ═══════════════════════════════════════════════════════
+   REVISION SCREEN
+═══════════════════════════════════════════════════════ */
+.revision-tabs{display:flex;gap:10px;overflow-x:auto;padding:16px 20px 0;scrollbar-width:none}
+.revision-tabs::-webkit-scrollbar{display:none}
+.rev-tab{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 16px;border-radius:var(--radius-sm);
+  font-size:13px;font-weight:700;color:var(--t3);
+  background:white;border:1px solid var(--border);
+  cursor:pointer;transition:all 0.2s ease;flex-shrink:0;
+}
+.rev-tab.active{background:var(--blue);color:white;border-color:transparent;box-shadow:0 4px 12px rgba(79,140,255,0.35)}
+.rev-tab .rev-count{
+  background:rgba(255,255,255,0.25);
+  border-radius:20px;padding:1px 7px;font-size:11px;
+}
+.rev-tab:not(.active) .rev-count{background:var(--bg);color:var(--t4)}
+
+.rev-section{padding:16px 20px 0}
+.rev-section-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 0 10px;cursor:pointer;
+}
+.rev-section-title{font-family:var(--font2);font-size:15px;font-weight:700;color:var(--t1)}
+.rev-section-count{font-size:12px;color:var(--t3);font-weight:600}
+.rev-problem{
+  background:white;border-radius:var(--radius-sm);
+  padding:14px;border:1px solid var(--border);
+  box-shadow:var(--shadow-sm);margin-bottom:8px;
+  cursor:pointer;transition:all 0.2s ease;
+  display:flex;align-items:center;gap:12px;
+}
+.rev-problem:active{transform:scale(0.98)}
+.rev-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.rev-info{flex:1}
+.rev-name{font-size:14px;font-weight:700;color:var(--t1)}
+.rev-meta{font-size:12px;color:var(--t3);font-weight:600;margin-top:3px}
+.rev-action{width:32px;height:32px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.rev-action svg{width:16px;height:16px;stroke:var(--t3)}
+
+/* ═══════════════════════════════════════════════════════
+   PROFILE SCREEN
+═══════════════════════════════════════════════════════ */
+.profile-top{
+  background:linear-gradient(160deg,var(--blue-light),var(--purple-light));
+  padding:52px 20px 24px;text-align:center;
+}
+.profile-avatar{
+  width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;font-weight:800;color:white;
+  margin:0 auto 12px;
+  box-shadow:0 8px 24px rgba(79,140,255,0.35);
+  position:relative;
+}
+.profile-name{font-family:var(--font2);font-size:22px;font-weight:700;color:var(--t1)}
+.profile-bio{font-size:13px;color:var(--t3);font-weight:600;margin-top:4px}
+.edit-profile-btn{
+  display:inline-flex;align-items:center;gap:4px;
+  color:var(--blue);font-size:13px;font-weight:700;margin-top:8px;
+  cursor:pointer;
+}
+.profile-stats-row{display:flex;gap:0;margin-top:20px;background:white;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
+.profile-stat{flex:1;padding:14px 8px;text-align:center;position:relative}
+.profile-stat + .profile-stat::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:1px;background:var(--border)}
+.profile-stat-val{font-family:var(--font2);font-size:22px;font-weight:700;color:var(--t1)}
+.profile-stat-label{font-size:10px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
+
+.settings-section{padding:16px 20px 0}
+.settings-label{font-size:11px;font-weight:800;color:var(--t4);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.settings-card{background:white;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow-sm);overflow:hidden}
+.settings-row{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background 0.15s ease;
+}
+.settings-row:last-child{border:none}
+.settings-row:active{background:var(--bg)}
+.settings-icon{
+  width:36px;height:36px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.settings-text{flex:1}
+.settings-name{font-size:14px;font-weight:700;color:var(--t1)}
+.settings-sub{font-size:12px;color:var(--t3);font-weight:600;margin-top:1px}
+.settings-chevron svg{width:18px;height:18px;stroke:var(--t4)}
+.danger-row{color:var(--red)}
+.danger-row .settings-name{color:var(--red)}
+.danger-row .settings-icon{background:#FEF2F2}
+.danger-row .settings-icon svg{stroke:var(--red)}
+
+/* ═══════════════════════════════════════════════════════
+   ACHIEVEMENTS SCREEN (accessed from Profile)
+═══════════════════════════════════════════════════════ */
+.achievement-card{
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  border-radius:var(--radius);padding:20px;margin-bottom:16px;
+  position:relative;overflow:hidden;
+}
+.achievement-card::before{content:'';position:absolute;width:200px;height:200px;background:rgba(255,255,255,0.06);border-radius:50%;top:-60px;right:-40px}
+.ach-level-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.ach-badge-big{font-size:36px}
+.ach-info .ach-label{font-size:11px;color:rgba(255,255,255,0.7);font-weight:700}
+.ach-info .ach-val{font-family:var(--font2);font-size:22px;font-weight:700;color:white}
+.ach-xp{font-family:var(--font2);font-size:18px;font-weight:700;color:rgba(255,255,255,0.9)}
+.ach-xp span{font-size:12px}
+.ach-bar-wrap{height:6px;background:rgba(255,255,255,0.2);border-radius:10px;overflow:hidden}
+.ach-bar-fill{height:100%;background:linear-gradient(90deg,#FFD700,#FFA500);border-radius:10px;width:82%}
+
+.recent-achievements{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.ach-item{
+  background:white;border-radius:var(--radius-sm);
+  padding:14px;border:1px solid var(--border);
+  box-shadow:var(--shadow-sm);
+  display:flex;align-items:center;gap:12px;
+}
+.ach-icon{font-size:28px;flex-shrink:0}
+.ach-text{flex:1}
+.ach-name{font-size:14px;font-weight:700;color:var(--t1)}
+.ach-desc{font-size:12px;color:var(--t3);font-weight:600;margin-top:2px}
+.ach-xp-badge{
+  background:var(--green-light);color:var(--green);
+  font-size:12px;font-weight:800;
+  padding:4px 10px;border-radius:20px;
+  flex-shrink:0;
+}
+
+.badges-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.badge-item{
+  background:white;border-radius:var(--radius-sm);
+  padding:14px 8px;text-align:center;
+  border:1px solid var(--border);box-shadow:var(--shadow-sm);
+}
+.badge-emoji{font-size:28px;margin-bottom:4px}
+.badge-name{font-size:10px;font-weight:700;color:var(--t3);line-height:1.3}
+.badge-item.locked{opacity:0.4;filter:grayscale(1)}
+
+/* ═══════════════════════════════════════════════════════
+   POMODORO SCREEN
+═══════════════════════════════════════════════════════ */
+.pomodoro-screen{padding:20px}
+.pomodoro-tabs{display:flex;background:var(--bg);border-radius:var(--radius-sm);padding:4px;margin-bottom:24px}
+.pom-tab{flex:1;padding:10px;border-radius:10px;font-size:13px;font-weight:700;color:var(--t3);text-align:center;cursor:pointer;transition:all 0.2s ease}
+.pom-tab.active{background:var(--blue);color:white;box-shadow:0 4px 12px rgba(79,140,255,0.35)}
+
+.timer-ring-wrap{
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 32px;
+  position:relative;
+  width:240px;height:240px;
+}
+.timer-ring-wrap svg{position:absolute;inset:0}
+.timer-display{
+  position:relative;z-index:1;
+  text-align:center;
+}
+.timer-time{font-family:var(--font2);font-size:52px;font-weight:700;color:var(--t1);letter-spacing:-2px}
+.timer-label{font-size:13px;font-weight:700;color:var(--t3);margin-top:4px}
+
+.timer-controls{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:24px}
+.timer-btn-main{
+  width:64px;height:64px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px rgba(79,140,255,0.4);
+  cursor:pointer;transition:all 0.2s ease;
+}
+.timer-btn-main:active{transform:scale(0.93)}
+.timer-btn-main svg{width:28px;height:28px;fill:white;stroke:none}
+.timer-btn-sec{
+  width:48px;height:48px;border-radius:50%;
+  background:white;border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.2s ease;
+  box-shadow:var(--shadow-sm);
+}
+.timer-btn-sec svg{width:20px;height:20px;stroke:var(--t3)}
+
+.pom-mode-btns{display:flex;gap:8px;justify-content:center;margin-bottom:24px}
+.pom-mode-btn{
+  padding:8px 16px;border-radius:20px;
+  font-size:12px;font-weight:700;color:var(--t3);
+  background:var(--bg);border:1.5px solid var(--border);
+  cursor:pointer;transition:all 0.2s ease;
+}
+.pom-mode-btn.active{background:var(--blue);color:white;border-color:transparent}
+
+.pom-stats{display:flex;gap:12px}
+.pom-stat{
+  flex:1;background:white;border-radius:var(--radius-sm);
+  padding:14px;text-align:center;border:1px solid var(--border);box-shadow:var(--shadow-sm);
+}
+.pom-stat-val{font-family:var(--font2);font-size:22px;font-weight:700;color:var(--t1)}
+.pom-stat-label{font-size:11px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+
+/* ═══════════════════════════════════════════════════════
+   PLANNER SCREEN
+═══════════════════════════════════════════════════════ */
+.planner-body{padding:20px}
+.planner-date{
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  border-radius:var(--radius);padding:18px;margin-bottom:16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.planner-date-text{font-family:var(--font2);font-size:16px;font-weight:700;color:white}
+.planner-date-sub{font-size:12px;color:rgba(255,255,255,0.7);font-weight:600;margin-top:2px}
+.planner-tabs{display:flex;background:var(--bg);border-radius:var(--radius-sm);padding:4px;margin-bottom:16px}
+.planner-tab{flex:1;padding:8px;border-radius:10px;font-size:13px;font-weight:700;color:var(--t3);text-align:center;cursor:pointer;transition:all 0.2s ease}
+.planner-tab.active{background:white;color:var(--blue);box-shadow:var(--shadow-sm)}
+.plan-items{display:flex;flex-direction:column;gap:8px}
+.plan-item{
+  background:white;border-radius:var(--radius-sm);
+  padding:14px;border:1px solid var(--border);box-shadow:var(--shadow-sm);
+  display:flex;align-items:center;gap:12px;
+  cursor:pointer;transition:all 0.2s ease;
+}
+.plan-item:active{transform:scale(0.98)}
+.plan-check{
+  width:24px;height:24px;border-radius:50%;
+  border:2.5px solid var(--border);display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;cursor:pointer;transition:all 0.25s ease;
+}
+.plan-check.done{background:var(--green);border-color:var(--green)}
+.plan-check.done svg{width:12px;height:12px;stroke:white;opacity:1}
+.plan-check svg{width:12px;height:12px;stroke:white;opacity:0}
+.plan-text{flex:1}
+.plan-task{font-size:14px;font-weight:700;color:var(--t1)}
+.plan-task.done{text-decoration:line-through;color:var(--t3)}
+.plan-meta{font-size:12px;color:var(--t3);font-weight:600;margin-top:2px}
+.plan-arrow{width:32px;height:32px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.plan-arrow svg{width:16px;height:16px;stroke:var(--t4)}
+.motivation-card-planner{
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  border-radius:var(--radius);padding:20px;margin-top:20px;
+  text-align:center;
+}
+.mot-text{font-size:15px;font-weight:700;color:white;line-height:1.5}
+.mot-emoji{font-size:28px;margin-bottom:8px}
+
+/* ═══════════════════════════════════════════════════════
+   CONFETTI
+═══════════════════════════════════════════════════════ */
+.confetti-wrap{
+  position:fixed;inset:0;pointer-events:none;z-index:1000;overflow:hidden;
+}
+.confetti-piece{
+  position:absolute;
+  width:8px;height:12px;
+  border-radius:2px;
+  animation:confettiFall linear forwards;
+}
+@keyframes confettiFall{
+  0%{transform:translateY(-20px) rotate(0deg);opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
+
+/* ═══════════════════════════════════════════════════════
+   ADD PROBLEM FAB
+═══════════════════════════════════════════════════════ */
+.fab{
+  position:fixed;
+  bottom:calc(var(--nav-h) + 16px);
+  right:20px;
+  width:56px;height:56px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px rgba(79,140,255,0.4);
+  cursor:pointer;transition:all 0.2s ease;
+  z-index:50;
+}
+.fab:active{transform:scale(0.92)}
+.fab svg{width:24px;height:24px;stroke:white}
+
+/* ═══════════════════════════════════════════════════════
+   TOAST NOTIFICATION
+═══════════════════════════════════════════════════════ */
+.toast{
+  position:fixed;
+  bottom:calc(var(--nav-h) + 20px);
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--t1);
+  color:white;
+  padding:12px 20px;
+  border-radius:30px;
+  font-size:13px;font-weight:700;
+  opacity:0;transition:all 0.3s ease;
+  z-index:500;
+  white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ═══════════════════════════════════════════════════════
+   LOADING SKELETON
+═══════════════════════════════════════════════════════ */
+@keyframes shimmer{0%{background-position:-468px 0}100%{background-position:468px 0}}
+.skeleton{
+  background:linear-gradient(90deg,#F0F0F0 25%,#E0E0E0 37%,#F0F0F0 63%);
+  background-size:400px 100%;
+  animation:shimmer 1.4s ease infinite;
+  border-radius:8px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PROFILE EDIT MODAL
+═══════════════════════════════════════════════════════ */
+.profile-edit-modal{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  z-index:300;display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity 0.3s ease;
+}
+.profile-edit-modal.open{opacity:1;pointer-events:all}
+.profile-edit-sheet{
+  background:white;border-radius:28px 28px 0 0;
+  width:100%;max-width:430px;
+  padding:0 20px 40px;
+  transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.profile-edit-modal.open .profile-edit-sheet{transform:translateY(0)}
+.edit-handle{width:40px;height:4px;border-radius:10px;background:var(--border);margin:12px auto 24px}
+.edit-field{margin-bottom:16px}
+.edit-label{font-size:12px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.edit-input{
+  width:100%;padding:14px 16px;
+  background:var(--bg);border-radius:var(--radius-sm);
+  font-size:14px;font-weight:600;color:var(--t1);
+  border:1.5px solid transparent;transition:border-color 0.2s ease;
+}
+.edit-input:focus{border-color:var(--blue)}
+.save-btn{
+  width:100%;padding:16px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  border-radius:var(--radius-sm);
+  color:white;font-size:15px;font-weight:800;
+  box-shadow:0 8px 24px rgba(79,140,255,0.35);
+  transition:all 0.2s ease;margin-top:8px;
+}
+.save-btn:active{transform:scale(0.97)}
+
+/* Motivational Quote rotation */
+.quote-slide{display:none}
+.quote-slide.active{display:block}
+
+/* Micro animations */
+@keyframes popIn{0%{transform:scale(0.8);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes slideUp{0%{transform:translateY(10px);opacity:0}100%{transform:translateY(0);opacity:1}}
+.animate-pop{animation:popIn 0.3s cubic-bezier(0.175,0.885,0.32,1.275)}
+.animate-slide{animation:slideUp 0.3s ease}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ SPLASH SCREEN ══════════════ -->
+<div id="splash" class="screen active" style="display:flex">
+  <div class="splash-blobs">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+    <div class="blob blob4"></div>
+  </div>
+  <div class="splash-content">
+    <div class="splash-logo-wrap">
+      <svg viewBox="0 0 52 52" fill="none"><path d="M8 16L26 8L44 16V36L26 44L8 36V16Z" stroke="white" stroke-width="2.5" fill="none"/><path d="M18 22L26 18L34 22V32L26 36L18 32V22Z" fill="white" opacity="0.3"/><text x="26" y="30" text-anchor="middle" fill="white" font-size="13" font-weight="900" font-family="monospace">&lt;/&gt;</text></svg>
+    </div>
+    <div class="splash-title">Code<span>Forge</span></div>
+    <div class="splash-tagline">Master DSA One Problem<br>At A Time</div>
+    <div class="splash-illustration">
+      <div class="splash-coder">
+        <div class="code-symbols cs1">{ }</div>
+        <div class="code-symbols cs2">( )</div>
+        <div class="code-symbols cs3">[ ]</div>
+        <div class="code-symbols cs4">→</div>
+        <div class="coder-avatar">
+          <svg viewBox="0 0 80 80"><circle cx="40" cy="28" r="16" fill="white" opacity="0.9"/><ellipse cx="40" cy="70" rx="26" ry="18" fill="white" opacity="0.9"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="splash-progress">
+      <div class="splash-progress-label">Loading your journey...</div>
+      <div class="splash-bar"><div class="splash-fill" id="splashFill"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ HOME SCREEN ══════════════ -->
+<div id="home" class="screen">
+  <div class="screen-body">
+    <div class="home-top">
+      <div class="greeting-row">
+        <div class="greeting-text">
+          <div class="greeting-sub" id="greetingTime">Good morning,</div>
+          <div class="greeting-name" id="greetingName">Arjun! 👋</div>
+        </div>
+        <div class="avatar" id="homeAvatar" onclick="showScreen('profile')">A</div>
+      </div>
+      <div class="home-hero-row">
+        <div class="hero-ring-card">
+          <div class="ring-stat-label">DSA Progress</div>
+          <div class="ring-wrap">
+            <svg class="ring-svg" width="90" height="90" viewBox="0 0 90 90">
+              <circle class="ring-bg" cx="45" cy="45" r="38" stroke-width="8"/>
+              <circle class="ring-fill" id="mainRing" cx="45" cy="45" r="38" stroke-width="8"
+                stroke="url(#rg1)" stroke-dasharray="238.8" stroke-dashoffset="238.8"/>
+              <defs>
+                <linearGradient id="rg1" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#4F8CFF"/>
+                  <stop offset="100%" stop-color="#8B5CF6"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="ring-label">
+              <div style="font-family:var(--font2);font-size:20px;font-weight:700;color:var(--t1)" id="progressPct">0%</div>
+            </div>
+          </div>
+          <div class="ring-stat-val" id="solvedCount">0</div>
+          <div class="ring-stat-sub">of 150 solved</div>
+        </div>
+        <div class="streak-card">
+          <div class="streak-fire">🔥</div>
+          <div class="streak-val" id="streakVal">0</div>
+          <div class="streak-label">Day Streak</div>
+          <div class="streak-best" id="streakBest">Best: 0 days</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-box-icon">✅</div>
+        <div class="stat-box-val" id="totalSolved">0</div>
+        <div class="stat-box-label">Solved</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-icon">🔴</div>
+        <div class="stat-box-val" id="totalHard">0</div>
+        <div class="stat-box-label">Hard</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-icon">📋</div>
+        <div class="stat-box-val" id="totalRevision">0</div>
+        <div class="stat-box-label">Review</div>
+      </div>
+    </div>
+
+    <div class="home-section" style="margin-top:16px">
+      <div class="xp-card">
+        <div class="xp-row">
+          <div class="xp-level">
+            <div class="xp-badge" id="levelEmoji">⚔️</div>
+            <div class="xp-level-text">
+              <div class="level-name" id="levelName">Code Warrior</div>
+              <div class="level-num" id="levelNum">Level 1</div>
+            </div>
+          </div>
+          <div class="xp-pts"><span id="xpCurrent">0</span><span> / <span id="xpNext">500</span> XP</span></div>
+        </div>
+        <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="home-section" style="margin-top:16px">
+      <div class="daily-target-card">
+        <div class="target-row">
+          <div class="target-label">Daily Target</div>
+          <div class="target-val"><span id="dailySolved">0</span> / 3</div>
+        </div>
+        <div style="margin-bottom:8px;font-size:12px;color:var(--t3);font-weight:600">Solve 3 problems today</div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill progress-bar-blue" id="dailyBar" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-section" style="margin-top:16px">
+      <div class="chart-card">
+        <div class="chart-row-top">
+          <div style="font-family:var(--font2);font-size:15px;font-weight:700;color:var(--t1)">Weekly Activity</div>
+          <div class="chart-solved"><span id="weeklySolved">0</span> <span>Solved</span></div>
+        </div>
+        <div class="chart-bars" id="weeklyChart"></div>
+      </div>
+    </div>
+
+    <div class="home-section" style="margin-top:16px">
+      <div class="quote-card" id="quoteCard">
+        <div class="quote-text" id="quoteText">"The expert in anything was once a beginner."</div>
+        <div class="quote-author" id="quoteAuthor">— Helen Hayes</div>
+      </div>
+    </div>
+
+    <div class="home-section" style="margin-top:20px">
+      <div class="section-row">
+        <div class="section-title">Recently Solved</div>
+        <div class="see-all" onclick="showScreen('problems')">See all</div>
+      </div>
+      <div id="recentlySolved"></div>
+    </div>
+
+    <div class="home-section" style="margin-top:20px;margin-bottom:20px">
+      <div class="section-title">Category Progress</div>
+      <div class="card" style="padding:16px">
+        <div id="categoryOverview"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ PROBLEMS SCREEN ══════════════ -->
+<div id="problems" class="screen">
+  <div class="screen-header">
+    <div class="header-row">
+      <div class="screen-title">Problems</div>
+      <div class="icon-btn" onclick="openFilterModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+      </div>
+    </div>
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Search problems..." id="searchInput" oninput="filterProblems()">
+    </div>
+    <div class="filter-chips" id="filterChips">
+      <div class="chip active" data-filter="all" onclick="setFilter('all',this)">All</div>
+      <div class="chip" data-filter="unsolved" onclick="setFilter('unsolved',this)">Unsolved</div>
+      <div class="chip" data-filter="solved" onclick="setFilter('solved',this)">Solved</div>
+      <div class="chip" data-filter="favorite" onclick="setFilter('favorite',this)">⭐ Favorites</div>
+      <div class="chip" data-filter="revision" onclick="setFilter('revision',this)">📋 Revision</div>
+      <div class="chip" data-filter="easy" onclick="setFilter('easy',this)">Easy</div>
+      <div class="chip" data-filter="medium" onclick="setFilter('medium',this)">Medium</div>
+      <div class="chip" data-filter="hard" onclick="setFilter('hard',this)">Hard</div>
+    </div>
+  </div>
+  <div class="screen-body" style="padding-top:0">
+    <div class="problems-list" id="problemsList"></div>
+  </div>
+</div>
+
+<!-- ══════════════ STATISTICS SCREEN ══════════════ -->
+<div id="stats" class="screen">
+  <div class="screen-header">
+    <div class="header-row">
+      <div class="screen-title">Statistics</div>
+      <div class="icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="screen-body stats-body">
+
+    <div class="heatmap-card">
+      <div class="section-row" style="margin-bottom:0">
+        <div style="font-family:var(--font2);font-size:15px;font-weight:700;color:var(--t1)">GitHub Heatmap</div>
+        <div style="font-size:12px;color:var(--t3);font-weight:600" id="heatmapStreak">Current Streak: 0 days</div>
+      </div>
+      <div class="heatmap-grid" id="heatmapGrid"></div>
+      <div class="heatmap-legend">
+        Less
+        <div class="legend-cells">
+          <div class="heatmap-cell"></div>
+          <div class="heatmap-cell level-1"></div>
+          <div class="heatmap-cell level-2"></div>
+          <div class="heatmap-cell level-3"></div>
+          <div class="heatmap-cell level-4"></div>
+        </div>
+        More
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-bottom:16px">
+      <div class="time-tabs" style="margin-bottom:16px">
+        <div class="time-tab active" onclick="setTimeRange('weekly',this)">Weekly</div>
+        <div class="time-tab" onclick="setTimeRange('monthly',this)">Monthly</div>
+        <div class="time-tab" onclick="setTimeRange('yearly',this)">Yearly</div>
+      </div>
+      <div class="section-row" style="margin-bottom:0">
+        <div style="font-family:var(--font2);font-size:15px;font-weight:700;color:var(--t1)">Problems Solved</div>
+        <div>
+          <div style="font-family:var(--font2);font-size:20px;font-weight:700;color:var(--t1)" id="statsTotal">0</div>
+          <div style="font-size:12px;color:var(--green);font-weight:700">↑ This week</div>
+        </div>
+      </div>
+      <div class="stats-bar-chart" id="statsBarChart"></div>
+      <div id="statsBarLabels" style="display:flex;gap:8px;padding:0 4px"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div style="font-family:var(--font2);font-size:15px;font-weight:700;color:var(--t1);margin-bottom:16px">Difficulty Distribution</div>
+      <div style="display:flex;align-items:center;gap:20px">
+        <div class="donut-wrap">
+          <svg width="130" height="130" viewBox="0 0 130 130" style="transform:rotate(-90deg)">
+            <circle cx="65" cy="65" r="50" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="20"/>
+            <circle id="donutEasy" cx="65" cy="65" r="50" fill="none" stroke="#22C55E" stroke-width="20" stroke-dasharray="314.16" stroke-dashoffset="314.16" stroke-linecap="round"/>
+            <circle id="donutMed" cx="65" cy="65" r="50" fill="none" stroke="#FB923C" stroke-width="20" stroke-dasharray="314.16" stroke-dashoffset="314.16" stroke-linecap="round"/>
+            <circle id="donutHard" cx="65" cy="65" r="50" fill="none" stroke="#EF4444" stroke-width="20" stroke-dasharray="314.16" stroke-dashoffset="314.16" stroke-linecap="round"/>
+          </svg>
+          <div class="donut-center">
+            <div class="donut-num" id="donutTotal">0</div>
+            <div class="donut-label">Total</div>
+          </div>
+        </div>
+        <div class="diff-legend">
+          <div class="diff-legend-item">
+            <div class="diff-dot" style="background:var(--green)"></div>
+            <div class="diff-name">Easy</div>
+            <div class="diff-val" id="easyCount">0 (0%)</div>
+          </div>
+          <div class="diff-legend-item">
+            <div class="diff-dot" style="background:var(--orange)"></div>
+            <div class="diff-name">Medium</div>
+            <div class="diff-val" id="medCount">0 (0%)</div>
+          </div>
+          <div class="diff-legend-item">
+            <div class="diff-dot" style="background:var(--red)"></div>
+            <div class="diff-name">Hard</div>
+            <div class="diff-val" id="hardCount">0 (0%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-family:var(--font2);font-size:15px;font-weight:700;color:var(--t1)">Topic Progress</div>
+      <div class="topic-progress-list" id="topicProgress"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ REVISION SCREEN ══════════════ -->
+<div id="revision" class="screen">
+  <div class="screen-header">
+    <div class="header-row">
+      <div class="screen-title">Revision</div>
+      <div class="icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      </div>
+    </div>
+    <div class="revision-tabs" id="revisionTabs">
+      <div class="rev-tab active" data-tab="toReview" onclick="setRevTab('toReview',this)">📋 To Review <span class="rev-count" id="toReviewCount">0</span></div>
+      <div class="rev-tab" data-tab="important" onclick="setRevTab('important',this)">⭐ Important <span class="rev-count" id="importantCount">0</span></div>
+      <div class="rev-tab" data-tab="favorites" onclick="setRevTab('favorites',this)">❤️ Favorites <span class="rev-count" id="favoritesCount">0</span></div>
+    </div>
+  </div>
+  <div class="screen-body" style="padding-top:0">
+    <div id="revisionContent"></div>
+  </div>
+</div>
+
+<!-- ══════════════ PROFILE SCREEN ══════════════ -->
+<div id="profile" class="screen">
+  <div class="screen-body" style="padding-top:0;padding-bottom:calc(var(--nav-h)+16px)">
+    <div class="profile-top">
+      <div class="profile-avatar" id="profileAvatar">A</div>
+      <div class="profile-name" id="profileName">Arjun Singh</div>
+      <div class="profile-bio" id="profileBio">Keep grinding! 💪</div>
+      <div class="edit-profile-btn" onclick="openProfileEdit()">✏️ Edit Profile</div>
+      <div class="profile-stats-row">
+        <div class="profile-stat">
+          <div class="profile-stat-val" id="pSolved">0</div>
+          <div class="profile-stat-label">Solved</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-val" id="pStreak">0</div>
+          <div class="profile-stat-label">Streak</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-val" id="pXP">0</div>
+          <div class="profile-stat-label">XP</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-label">Achievements</div>
+      <div class="settings-card">
+        <div class="settings-row" onclick="showAchievements()">
+          <div class="settings-icon" style="background:var(--purple-light)"><span style="font-size:20px">🏆</span></div>
+          <div class="settings-text">
+            <div class="settings-name">Badges & Achievements</div>
+            <div class="settings-sub" id="achSubtext">Level 1 · 0 XP earned</div>
+          </div>
+          <div class="settings-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+        <div class="settings-row" onclick="showPomodoro()">
+          <div class="settings-icon" style="background:var(--orange-light)"><span style="font-size:20px">⏱️</span></div>
+          <div class="settings-text">
+            <div class="settings-name">Pomodoro Timer</div>
+            <div class="settings-sub" id="pomSubtext">0 sessions today</div>
+          </div>
+          <div class="settings-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+        <div class="settings-row" onclick="showPlanner()">
+          <div class="settings-icon" style="background:var(--blue-light)"><span style="font-size:20px">📅</span></div>
+          <div class="settings-text">
+            <div class="settings-name">Daily Planner</div>
+            <div class="settings-sub">Plan today's coding session</div>
+          </div>
+          <div class="settings-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section" style="margin-top:8px">
+      <div class="settings-label">Settings</div>
+      <div class="settings-card">
+        <div class="settings-row" onclick="alert('Reminder feature coming soon!')">
+          <div class="settings-icon" style="background:var(--green-light)"><span style="font-size:20px">🔔</span></div>
+          <div class="settings-text">
+            <div class="settings-name">Reminders</div>
+            <div class="settings-sub">Set daily coding reminders</div>
+          </div>
+          <div class="settings-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+        <div class="settings-row" onclick="exportData()">
+          <div class="settings-icon" style="background:var(--blue-light)"><span style="font-size:20px">💾</span></div>
+          <div class="settings-text">
+            <div class="settings-name">Backup & Export</div>
+            <div class="settings-sub">Download your progress data</div>
+          </div>
+          <div class="settings-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+        <div class="settings-row" onclick="importData()">
+          <div class="settings-icon" style="background:var(--orange-light)"><span style="font-size:20px">📥</span></div>
+          <div class="settings-text">
+            <div class="settings-name">Import Data</div>
+            <div class="settings-sub">Restore from backup</div>
+          </div>
+          <div class="settings-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+        <div class="settings-row" onclick="alert('Detailed settings coming soon!')">
+          <div class="settings-icon" style="background:var(--bg)"><span style="font-size:20px">⚙️</span></div>
+          <div class="settings-text">
+            <div class="settings-name">Settings</div>
+            <div class="settings-sub">App preferences & configurations</div>
+          </div>
+          <div class="settings-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section" style="margin-top:8px;margin-bottom:20px">
+      <div class="settings-card">
+        <div class="settings-row danger-row" onclick="confirmReset()">
+          <div class="settings-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.03"/></svg></div>
+          <div class="settings-text">
+            <div class="settings-name">Reset Progress</div>
+            <div class="settings-sub" style="color:var(--red);opacity:0.7">Clear all data and start over</div>
+          </div>
+          <div class="settings-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="#EF4444"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ACHIEVEMENTS SCREEN ══════════════ -->
+<div id="achievements" class="screen">
+  <div class="screen-header">
+    <div class="header-row">
+      <div class="icon-btn" onclick="showScreen('profile')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </div>
+      <div class="screen-title">Achievements</div>
+      <div style="width:38px"></div>
+    </div>
+  </div>
+  <div class="screen-body" style="padding-top:0;padding:0 20px calc(var(--nav-h)+20px)">
+    <div style="padding-top:16px">
+      <div class="achievement-card">
+        <div class="ach-level-row">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="ach-badge-big" id="achBadgeBig">⚔️</div>
+            <div class="ach-info">
+              <div class="ach-label">Current Level</div>
+              <div class="ach-val" id="achLevelName">Code Warrior</div>
+            </div>
+          </div>
+          <div class="ach-xp" id="achXpDisplay">0 <span>XP</span></div>
+        </div>
+        <div class="ach-bar-wrap"><div class="ach-bar-fill" id="achBarFill"></div></div>
+      </div>
+
+      <div class="section-title" style="margin-top:20px">Recent Achievements</div>
+      <div class="recent-achievements" id="recentAchievements"></div>
+
+      <div class="section-title">All Badges</div>
+      <div class="badges-grid" id="badgesGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ POMODORO SCREEN ══════════════ -->
+<div id="pomodoro" class="screen">
+  <div class="screen-header">
+    <div class="header-row">
+      <div class="icon-btn" onclick="showScreen('profile')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </div>
+      <div class="screen-title">Pomodoro</div>
+      <div class="icon-btn" onclick="alert('Pomodoro settings coming soon!')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="screen-body">
+    <div class="pomodoro-screen">
+      <div class="pomodoro-tabs">
+        <div class="pom-tab active" onclick="setPomTab('timer',this)">Timer</div>
+        <div class="pom-tab" onclick="setPomTab('stats',this)">Stats</div>
+      </div>
+
+      <div id="pomTimerView">
+        <div class="pom-mode-btns">
+          <div class="pom-mode-btn active" onclick="setPomMode(25,'Focus',this)" id="btnFocus">🎯 Focus</div>
+          <div class="pom-mode-btn" onclick="setPomMode(5,'Short Break',this)" id="btnShort">☕ Short Break</div>
+          <div class="pom-mode-btn" onclick="setPomMode(15,'Long Break',this)" id="btnLong">🌙 Long Break</div>
+        </div>
+
+        <div class="timer-ring-wrap">
+          <svg width="240" height="240" viewBox="0 0 240 240">
+            <circle cx="120" cy="120" r="100" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="12"/>
+            <circle id="pomRing" cx="120" cy="120" r="100" fill="none"
+              stroke="url(#pg1)" stroke-width="12" stroke-linecap="round"
+              stroke-dasharray="628.3" stroke-dashoffset="0"
+              transform="rotate(-90 120 120)"/>
+            <defs>
+              <linearGradient id="pg1" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#4F8CFF"/>
+                <stop offset="100%" stop-color="#8B5CF6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="timer-display">
+            <div class="timer-time" id="timerDisplay">25:00</div>
+            <div class="timer-label" id="timerLabel">Focus Time</div>
+          </div>
+        </div>
+
+        <div class="timer-controls">
+          <div class="timer-btn-sec" onclick="resetTimer()">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.03"/></svg>
+          </div>
+          <div class="timer-btn-main" id="timerPlayBtn" onclick="toggleTimer()">
+            <svg id="timerIcon" viewBox="0 0 24 24" style="fill:white;stroke:none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+          <div class="timer-btn-sec" onclick="skipTimer()">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+          </div>
+        </div>
+
+        <div class="pom-stats">
+          <div class="pom-stat">
+            <div class="pom-stat-val" id="pomSessions">0</div>
+            <div class="pom-stat-label">Sessions</div>
+          </div>
+          <div class="pom-stat">
+            <div class="pom-stat-val" id="pomFocusTime">0h 0m</div>
+            <div class="pom-stat-label">Focus Time</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pomStatsView" style="display:none">
+        <div class="card" style="margin-bottom:16px">
+          <div style="font-family:var(--font2);font-size:15px;font-weight:700;margin-bottom:12px">Today's Focus</div>
+          <div style="display:flex;gap:12px">
+            <div class="pom-stat" style="flex:1">
+              <div class="pom-stat-val" id="pomStatSessions">0</div>
+              <div class="pom-stat-label">Sessions</div>
+            </div>
+            <div class="pom-stat" style="flex:1">
+              <div class="pom-stat-val" id="pomStatTime">0h 0m</div>
+              <div class="pom-stat-label">Focus Time</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div style="font-family:var(--font2);font-size:15px;font-weight:700;margin-bottom:12px">This Week</div>
+          <div class="chart-bars" style="height:80px" id="pomWeekChart"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ PLANNER SCREEN ══════════════ -->
+<div id="planner" class="screen">
+  <div class="screen-header">
+    <div class="header-row">
+      <div class="icon-btn" onclick="showScreen('profile')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </div>
+      <div class="screen-title">Today's Plan</div>
+      <div class="icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="screen-body">
+    <div class="planner-body">
+      <div class="planner-date">
+        <div>
+          <div class="planner-date-text" id="plannerDate">Today</div>
+          <div class="planner-date-sub">Daily Goal: Solve 3 problems</div>
+        </div>
+        <div style="font-size:28px">📅</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="font-family:var(--font2);font-size:15px;font-weight:700">Daily Goal</div>
+        <div style="font-size:14px;font-weight:700;color:var(--blue)" id="planGoal">0 / 3</div>
+      </div>
+      <div class="progress-bar-wrap" style="margin-bottom:20px">
+        <div class="progress-bar-fill progress-bar-blue" id="planProgressBar" style="width:0%"></div>
+      </div>
+
+      <div class="planner-tabs">
+        <div class="planner-tab active" onclick="setPlannerTab('plan',this)">Plan</div>
+        <div class="planner-tab" onclick="setPlannerTab('done',this)">Done</div>
+      </div>
+
+      <div id="plannerItems" class="plan-items"></div>
+
+      <div class="motivation-card-planner">
+        <div class="mot-emoji">🚀</div>
+        <div class="mot-text">"Consistency is what transforms average into excellence."</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ BOTTOM NAV ══════════════ -->
+<div class="bottom-nav" id="bottomNav" style="display:none">
+  <div class="nav-item active" data-screen="home" onclick="showScreen('home')">
+    <div class="nav-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <div class="nav-label">Home</div>
+    <div class="nav-active-dot"></div>
+  </div>
+  <div class="nav-item" data-screen="problems" onclick="showScreen('problems')">
+    <div class="nav-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    </div>
+    <div class="nav-label">Problems</div>
+    <div class="nav-active-dot"></div>
+  </div>
+  <div class="nav-center-btn" onclick="showScreen('stats')">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+  </div>
+  <div class="nav-item" data-screen="revision" onclick="showScreen('revision')">
+    <div class="nav-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.03"/></svg>
+    </div>
+    <div class="nav-label">Revision</div>
+    <div class="nav-active-dot"></div>
+  </div>
+  <div class="nav-item" data-screen="profile" onclick="showScreen('profile')">
+    <div class="nav-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <div class="nav-label">Profile</div>
+    <div class="nav-active-dot"></div>
+  </div>
+</div>
+
+<!-- ══════════════ PROBLEM DETAIL MODAL ══════════════ -->
+<div class="modal-overlay" id="problemModal" onclick="closeModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-top-row">
+        <div class="modal-back" onclick="closeProblemModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+        <div class="modal-actions-row">
+          <div class="icon-btn" id="modalRevBtn" onclick="toggleModalRevision()">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.03"/></svg>
+          </div>
+          <div class="icon-btn" id="modalFavBtn" onclick="toggleModalFavorite()">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="modal-problem-num" id="modalProbNum">#1</div>
+      <div class="modal-problem-title" id="modalProbTitle">Two Sum</div>
+      <div class="modal-tags" id="modalTags"></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-label">Description</div>
+        <div class="modal-desc" id="modalDesc">Loading...</div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-label">Your Notes</div>
+        <textarea class="notes-input" id="modalNotes" placeholder="Add your solution approach, notes, or key observations..." oninput="saveModalNotes()"></textarea>
+      </div>
+      <div class="modal-section">
+        <div class="modal-toggle-row">
+          <div class="modal-toggle-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><polyline points="20 6 9 17 4 12"/></svg>
+            <div>
+              <span>Solved</span>
+              <div class="modal-toggle-meta" id="modalSolvedDate"></div>
+            </div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="solvedToggle" onchange="toggleSolved()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="modal-toggle-row">
+          <div class="modal-toggle-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.03"/></svg>
+            <span>Revision</span>
+          </div>
+          <label class="toggle"><input type="checkbox" id="revisionToggle" onchange="toggleRevision()"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="modal-toggle-row">
+          <div class="modal-toggle-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span>Mark Important</span>
+          </div>
+          <label class="toggle"><input type="checkbox" id="importantToggle" onchange="toggleImportant()"><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-label">Solve History</div>
+        <div id="solveHistory"></div>
+      </div>
+      <button class="open-lc-btn" id="openLcBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Open in LeetCode
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ PROFILE EDIT MODAL ══════════════ -->
+<div class="profile-edit-modal" id="profileEditModal" onclick="closeProfileEditModal(event)">
+  <div class="profile-edit-sheet">
+    <div class="edit-handle"></div>
+    <div class="edit-field">
+      <div class="edit-label">Name</div>
+      <input class="edit-input" type="text" id="editName" placeholder="Your name">
+    </div>
+    <div class="edit-field">
+      <div class="edit-label">Bio</div>
+      <input class="edit-input" type="text" id="editBio" placeholder="Your coding motivation">
+    </div>
+    <div class="edit-field">
+      <div class="edit-label">Daily Goal (problems)</div>
+      <input class="edit-input" type="number" id="editGoal" placeholder="3" min="1" max="20">
+    </div>
+    <div class="edit-field">
+      <div class="edit-label">LeetCode Username</div>
+      <input class="edit-input" type="text" id="editUsername" placeholder="your-lc-username">
+    </div>
+    <button class="save-btn" onclick="saveProfile()">Save Changes</button>
+  </div>
+</div>
+
+<!-- ══════════════ TOAST ══════════════ -->
+<div class="toast" id="toast"></div>
+<div class="confetti-wrap" id="confetti"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA: 150 LEETCODE PROBLEMS
+// ═══════════════════════════════════════════════════════
+const CATEGORIES = [
+  { id: 'arrays', name: 'Arrays & Hashing', color: '#4F8CFF', problems: [
+    {id:1,n:'Two Sum',d:'Easy',lc:'https://leetcode.com/problems/two-sum/',desc:'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.'},
+    {id:2,n:'Best Time to Buy and Sell Stock',d:'Easy',lc:'https://leetcode.com/problems/best-time-to-buy-and-sell-stock/',desc:'You are given an array prices where prices[i] is the price of a given stock on the ith day. Maximize profit.'},
+    {id:3,n:'Contains Duplicate',d:'Easy',lc:'https://leetcode.com/problems/contains-duplicate/',desc:'Given an integer array nums, return true if any value appears at least twice in the array.'},
+    {id:4,n:'Product of Array Except Self',d:'Medium',lc:'https://leetcode.com/problems/product-of-array-except-self/',desc:'Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].'},
+    {id:5,n:'Maximum Subarray',d:'Medium',lc:'https://leetcode.com/problems/maximum-subarray/',desc:"Given an integer array nums, find the subarray with the largest sum, and return its sum."},
+    {id:6,n:'Maximum Product Subarray',d:'Medium',lc:'https://leetcode.com/problems/maximum-product-subarray/',desc:'Given an integer array nums, find a subarray that has the largest product, and return the product.'},
+    {id:7,n:'Find Minimum in Rotated Sorted Array',d:'Medium',lc:'https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/',desc:'Given the sorted rotated array nums of unique elements, return the minimum element.'},
+    {id:8,n:'Search in Rotated Sorted Array',d:'Medium',lc:'https://leetcode.com/problems/search-in-rotated-sorted-array/',desc:'Given the array nums after the possible rotation and an integer target, return the index of target.'},
+    {id:9,n:'3Sum',d:'Medium',lc:'https://leetcode.com/problems/3sum/',desc:'Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.'},
+    {id:10,n:'Container With Most Water',d:'Medium',lc:'https://leetcode.com/problems/container-with-most-water/',desc:'Given n non-negative integers, find two lines that together form a container such that the container contains the most water.'},
+    {id:11,n:'Trapping Rain Water',d:'Hard',lc:'https://leetcode.com/problems/trapping-rain-water/',desc:'Given n non-negative integers representing elevation map, compute how much water it can trap after raining.'},
+    {id:12,n:'Merge Intervals',d:'Medium',lc:'https://leetcode.com/problems/merge-intervals/',desc:'Given an array of intervals, merge all overlapping intervals.'},
+    {id:13,n:'Insert Interval',d:'Medium',lc:'https://leetcode.com/problems/insert-interval/',desc:'Given a sorted array of disjoint intervals and a new interval, insert the new interval and merge overlapping.'},
+  ]},
+  { id: 'strings', name: 'Strings', color: '#8B5CF6', problems: [
+    {id:14,n:'Valid Anagram',d:'Easy',lc:'https://leetcode.com/problems/valid-anagram/',desc:'Given two strings s and t, return true if t is an anagram of s, and false otherwise.'},
+    {id:15,n:'Valid Palindrome',d:'Easy',lc:'https://leetcode.com/problems/valid-palindrome/',desc:'A phrase is a palindrome if it reads the same forward and backward.'},
+    {id:16,n:'Group Anagrams',d:'Medium',lc:'https://leetcode.com/problems/group-anagrams/',desc:'Given an array of strings strs, group the anagrams together.'},
+    {id:17,n:'Longest Substring Without Repeating Characters',d:'Medium',lc:'https://leetcode.com/problems/longest-substring-without-repeating-characters/',desc:'Given a string s, find the length of the longest substring without repeating characters.'},
+    {id:18,n:'Longest Repeating Character Replacement',d:'Medium',lc:'https://leetcode.com/problems/longest-repeating-character-replacement/',desc:'You are given a string s and an integer k. You can choose any character and change it to any other character, at most k times.'},
+    {id:19,n:'Minimum Window Substring',d:'Hard',lc:'https://leetcode.com/problems/minimum-window-substring/',desc:'Given two strings s and t, return the minimum window substring of s that contains every character in t.'},
+    {id:20,n:'Encode and Decode Strings',d:'Medium',lc:'https://leetcode.com/problems/encode-and-decode-strings/',desc:'Design an algorithm to encode a list of strings to a single string. The encoded string is then sent over the network.'},
+    {id:21,n:'Palindromic Substrings',d:'Medium',lc:'https://leetcode.com/problems/palindromic-substrings/',desc:'Given a string s, return the number of palindromic substrings in it.'},
+    {id:22,n:'Longest Palindromic Substring',d:'Medium',lc:'https://leetcode.com/problems/longest-palindromic-substring/',desc:'Given a string s, return the longest palindromic substring in s.'},
+    {id:23,n:'String to Integer (atoi)',d:'Medium',lc:'https://leetcode.com/problems/string-to-integer-atoi/',desc:'Implement atoi, which converts a string to an integer.'},
+    {id:24,n:'Implement strStr()',d:'Easy',lc:'https://leetcode.com/problems/implement-strstr/',desc:'Return the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.'},
+    {id:25,n:'Count and Say',d:'Medium',lc:'https://leetcode.com/problems/count-and-say/',desc:'The count-and-say sequence is a sequence of digit strings defined by the recursive formula.'},
+  ]},
+  { id: 'math', name: 'Math', color: '#22C55E', problems: [
+    {id:26,n:'Palindrome Number',d:'Easy',lc:'https://leetcode.com/problems/palindrome-number/',desc:'Given an integer x, return true if x is a palindrome, and false otherwise.'},
+    {id:27,n:'Reverse Integer',d:'Medium',lc:'https://leetcode.com/problems/reverse-integer/',desc:'Given a signed 32-bit integer x, return x with its digits reversed.'},
+    {id:28,n:'Roman to Integer',d:'Easy',lc:'https://leetcode.com/problems/roman-to-integer/',desc:'Given a roman numeral, convert it to an integer.'},
+    {id:29,n:'Integer to Roman',d:'Medium',lc:'https://leetcode.com/problems/integer-to-roman/',desc:'Given an integer, convert it to a roman numeral.'},
+    {id:30,n:'Sqrt(x)',d:'Easy',lc:'https://leetcode.com/problems/sqrtx/',desc:'Given a non-negative integer x, return the square root of x rounded down to the nearest integer.'},
+    {id:31,n:'Pow(x, n)',d:'Medium',lc:'https://leetcode.com/problems/powx-n/',desc:'Implement pow(x, n), which calculates x raised to the power n.'},
+    {id:32,n:'Count Primes',d:'Medium',lc:'https://leetcode.com/problems/count-primes/',desc:'Given an integer n, return the number of prime numbers that are strictly less than n.'},
+    {id:33,n:'Missing Number',d:'Easy',lc:'https://leetcode.com/problems/missing-number/',desc:'Given an array nums containing n distinct numbers in the range [0, n], return the only number in the range that is missing.'},
+    {id:34,n:'Happy Number',d:'Easy',lc:'https://leetcode.com/problems/happy-number/',desc:'A happy number is a number defined by the process of replacing with sum of squares of its digits until 1.'},
+    {id:35,n:'Excel Sheet Column Number',d:'Easy',lc:'https://leetcode.com/problems/excel-sheet-column-number/',desc:'Given a string columnTitle that represents the column title as appears in an Excel spreadsheet, return its corresponding column number.'},
+  ]},
+  { id: 'sorting', name: 'Searching & Sorting', color: '#FB923C', problems: [
+    {id:36,n:'Binary Search',d:'Easy',lc:'https://leetcode.com/problems/binary-search/',desc:'Given an array of integers nums which is sorted in ascending order, and an integer target, return the index of the target.'},
+    {id:37,n:'Kth Largest Element in an Array',d:'Medium',lc:'https://leetcode.com/problems/kth-largest-element-in-an-array/',desc:'Given an integer array nums and an integer k, return the kth largest element in the array.'},
+    {id:38,n:'Top K Frequent Elements',d:'Medium',lc:'https://leetcode.com/problems/top-k-frequent-elements/',desc:'Given an integer array nums and an integer k, return the k most frequent elements.'},
+    {id:39,n:'Sort Colors',d:'Medium',lc:'https://leetcode.com/problems/sort-colors/',desc:'Given an array nums with n objects colored red, white, or blue, sort them in-place.'},
+    {id:40,n:'Merge Sorted Array',d:'Easy',lc:'https://leetcode.com/problems/merge-sorted-array/',desc:'Given two integer arrays nums1 and nums2 sorted in non-decreasing order, merge nums2 into nums1 as one sorted array.'},
+    {id:41,n:'Search a 2D Matrix',d:'Medium',lc:'https://leetcode.com/problems/search-a-2d-matrix/',desc:'Given an m x n integer matrix matrix with specific properties, return true if target is in matrix.'},
+    {id:42,n:'First Bad Version',d:'Easy',lc:'https://leetcode.com/problems/first-bad-version/',desc:'Given n versions, find the first bad one using binary search.'},
+    {id:43,n:'Median of Two Sorted Arrays',d:'Hard',lc:'https://leetcode.com/problems/median-of-two-sorted-arrays/',desc:'Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.'},
+    {id:44,n:'Merge k Sorted Lists',d:'Hard',lc:'https://leetcode.com/problems/merge-k-sorted-lists/',desc:'You are given an array of k linked-lists lists, each linked-list is sorted in ascending order. Merge all the linked-lists into one sorted linked-list.'},
+  ]},
+  { id: 'sliding', name: 'Sliding Window', color: '#FF5EA8', problems: [
+    {id:45,n:'Maximum Average Subarray I',d:'Easy',lc:'https://leetcode.com/problems/maximum-average-subarray-i/',desc:'Find a contiguous subarray whose length is equal to k that has the maximum average value.'},
+    {id:46,n:'Fruit Into Baskets',d:'Medium',lc:'https://leetcode.com/problems/fruit-into-baskets/',desc:'You have two baskets, and each basket can carry any quantity of fruit, but you want each basket to only carry one type of fruit.'},
+    {id:47,n:'Permutation in String',d:'Medium',lc:'https://leetcode.com/problems/permutation-in-string/',desc:'Given two strings s1 and s2, return true if s2 contains a permutation of s1.'},
+    {id:48,n:'Sliding Window Maximum',d:'Hard',lc:'https://leetcode.com/problems/sliding-window-maximum/',desc:'Given an array of integers nums, there is a sliding window of size k moving from left to right. Return the maximum in each window.'},
+    {id:49,n:'Minimum Size Subarray Sum',d:'Medium',lc:'https://leetcode.com/problems/minimum-size-subarray-sum/',desc:'Given an array of positive integers nums and a positive integer target, return the minimal length of a contiguous subarray of which the sum is greater than or equal to target.'},
+    {id:50,n:'Max Consecutive Ones III',d:'Medium',lc:'https://leetcode.com/problems/max-consecutive-ones-iii/',desc:'Given a binary array nums and an integer k, return the maximum number of consecutive 1s in the array if you can flip at most k 0s.'},
+    {id:51,n:'Longest Subarray of 1s After Deleting One Element',d:'Medium',lc:'https://leetcode.com/problems/longest-subarray-of-1s-after-deleting-one-element/',desc:'Given a binary array nums, you should delete one element from it. Return the size of the longest non-empty subarray containing only 1s in the resulting array.'},
+  ]},
+  { id: 'stack', name: 'Stack & Queue', color: '#F59E0B', problems: [
+    {id:52,n:'Valid Parentheses',d:'Easy',lc:'https://leetcode.com/problems/valid-parentheses/',desc:'Given a string s containing just the characters \'(\', \')\', \'{\', \'}\', \'[\' and \']\', determine if the input string is valid.'},
+    {id:53,n:'Min Stack',d:'Medium',lc:'https://leetcode.com/problems/min-stack/',desc:'Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.'},
+    {id:54,n:'Evaluate Reverse Polish Notation',d:'Medium',lc:'https://leetcode.com/problems/evaluate-reverse-polish-notation/',desc:'Evaluate the value of an arithmetic expression in Reverse Polish Notation.'},
+    {id:55,n:'Generate Parentheses',d:'Medium',lc:'https://leetcode.com/problems/generate-parentheses/',desc:'Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.'},
+    {id:56,n:'Daily Temperatures',d:'Medium',lc:'https://leetcode.com/problems/daily-temperatures/',desc:'Given an array of integers temperatures represents the daily temperatures, return an array such that answer[i] is the number of days you have to wait for a warmer temperature.'},
+    {id:57,n:'Car Fleet',d:'Medium',lc:'https://leetcode.com/problems/car-fleet/',desc:'There are n cars going to the same destination. Calculate the number of car fleets.'},
+    {id:58,n:'Largest Rectangle in Histogram',d:'Hard',lc:'https://leetcode.com/problems/largest-rectangle-in-histogram/',desc:'Given an array of integers heights representing the histogram bar heights, return the area of the largest rectangle in the histogram.'},
+    {id:59,n:'Implement Queue using Stacks',d:'Easy',lc:'https://leetcode.com/problems/implement-queue-using-stacks/',desc:'Implement a first in first out queue using only two stacks.'},
+    {id:60,n:'Next Greater Element I',d:'Easy',lc:'https://leetcode.com/problems/next-greater-element-i/',desc:'Find the next greater number for nums1[i] in nums2.'},
+  ]},
+  { id: 'linked', name: 'Linked List', color: '#6366F1', problems: [
+    {id:61,n:'Reverse Linked List',d:'Easy',lc:'https://leetcode.com/problems/reverse-linked-list/',desc:'Given the head of a singly linked list, reverse the list, and return the reversed list.'},
+    {id:62,n:'Merge Two Sorted Lists',d:'Easy',lc:'https://leetcode.com/problems/merge-two-sorted-lists/',desc:'Merge the two lists into one sorted list.'},
+    {id:63,n:'Linked List Cycle',d:'Easy',lc:'https://leetcode.com/problems/linked-list-cycle/',desc:'Given head, determine if the linked list has a cycle in it.'},
+    {id:64,n:'Reorder List',d:'Medium',lc:'https://leetcode.com/problems/reorder-list/',desc:'Reorder linked list to: L0 → Ln → L1 → Ln-1 → L2 → Ln-2 → …'},
+    {id:65,n:'Remove Nth Node From End of List',d:'Medium',lc:'https://leetcode.com/problems/remove-nth-node-from-end-of-list/',desc:'Given the head of a linked list, remove the nth node from the end of the list and return its head.'},
+    {id:66,n:'Copy List with Random Pointer',d:'Medium',lc:'https://leetcode.com/problems/copy-list-with-random-pointer/',desc:'Construct a deep copy of the list where each node has a next pointer and a random pointer.'},
+    {id:67,n:'Add Two Numbers',d:'Medium',lc:'https://leetcode.com/problems/add-two-numbers/',desc:'You are given two non-empty linked lists representing two non-negative integers. Add the two numbers and return the sum as a linked list.'},
+    {id:68,n:'Find the Duplicate Number',d:'Medium',lc:'https://leetcode.com/problems/find-the-duplicate-number/',desc:'Given an array of integers nums containing n + 1 integers where each integer is in the range [1, n], find and return the one duplicate number.'},
+    {id:69,n:'LRU Cache',d:'Medium',lc:'https://leetcode.com/problems/lru-cache/',desc:'Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.'},
+    {id:70,n:'Reverse Nodes in k-Group',d:'Hard',lc:'https://leetcode.com/problems/reverse-nodes-in-k-group/',desc:'Given the head of a linked list, reverse the nodes of the list k at a time.'},
+  ]},
+  { id: 'trees', name: 'Trees', color: '#10B981', problems: [
+    {id:71,n:'Invert Binary Tree',d:'Easy',lc:'https://leetcode.com/problems/invert-binary-tree/',desc:'Given the root of a binary tree, invert the tree, and return its root.'},
+    {id:72,n:'Maximum Depth of Binary Tree',d:'Easy',lc:'https://leetcode.com/problems/maximum-depth-of-binary-tree/',desc:'Given the root of a binary tree, return its maximum depth.'},
+    {id:73,n:'Same Tree',d:'Easy',lc:'https://leetcode.com/problems/same-tree/',desc:'Given the roots of two binary trees p and q, write a function to check if they are the same or not.'},
+    {id:74,n:'Subtree of Another Tree',d:'Easy',lc:'https://leetcode.com/problems/subtree-of-another-tree/',desc:'Given the roots of two binary trees root and subRoot, return true if there is a subtree of root with the same structure and node values as subRoot.'},
+    {id:75,n:'Lowest Common Ancestor of a BST',d:'Medium',lc:'https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/',desc:'Given a BST, find the lowest common ancestor (LCA) node of two given nodes in the BST.'},
+    {id:76,n:'Binary Tree Level Order Traversal',d:'Medium',lc:'https://leetcode.com/problems/binary-tree-level-order-traversal/',desc:'Given the root of a binary tree, return the level order traversal of its nodes values.'},
+    {id:77,n:'Binary Tree Right Side View',d:'Medium',lc:'https://leetcode.com/problems/binary-tree-right-side-view/',desc:'Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.'},
+    {id:78,n:'Count Good Nodes in Binary Tree',d:'Medium',lc:'https://leetcode.com/problems/count-good-nodes-in-binary-tree/',desc:'Given a binary tree root, a node X in the tree is named good if in the path from root to X there are no nodes with a value greater than X.'},
+    {id:79,n:'Validate Binary Search Tree',d:'Medium',lc:'https://leetcode.com/problems/validate-binary-search-tree/',desc:'Given the root of a binary tree, determine if it is a valid binary search tree (BST).'},
+    {id:80,n:'Kth Smallest Element in a BST',d:'Medium',lc:'https://leetcode.com/problems/kth-smallest-element-in-a-bst/',desc:'Given the root of a binary search tree, and an integer k, return the kth smallest value of all the values of the nodes in the tree.'},
+    {id:81,n:'Construct Binary Tree from Preorder and Inorder Traversal',d:'Medium',lc:'https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/',desc:'Given two integer arrays preorder and inorder, construct and return the binary tree.'},
+    {id:82,n:'Binary Tree Maximum Path Sum',d:'Hard',lc:'https://leetcode.com/problems/binary-tree-maximum-path-sum/',desc:'A path in a binary tree is a sequence of nodes where each pair of adjacent nodes in the sequence has an edge connecting them. Return the maximum path sum.'},
+    {id:83,n:'Serialize and Deserialize Binary Tree',d:'Hard',lc:'https://leetcode.com/problems/serialize-and-deserialize-binary-tree/',desc:'Design an algorithm to serialize and deserialize a binary tree.'},
+  ]},
+  { id: 'graphs', name: 'Graphs', color: '#EC4899', problems: [
+    {id:84,n:'Number of Islands',d:'Medium',lc:'https://leetcode.com/problems/number-of-islands/',desc:'Given an m x n 2D binary grid which represents a map of 1s (land) and 0s (water), return the number of islands.'},
+    {id:85,n:'Max Area of Island',d:'Medium',lc:'https://leetcode.com/problems/max-area-of-island/',desc:'Given a binary matrix grid, return the maximum area of an island in grid.'},
+    {id:86,n:'Clone Graph',d:'Medium',lc:'https://leetcode.com/problems/clone-graph/',desc:'Given a reference of a node in a connected undirected graph, return a deep copy of the graph.'},
+    {id:87,n:'Walls and Gates',d:'Medium',lc:'https://leetcode.com/problems/walls-and-gates/',desc:'Fill each empty room with the distance to its nearest gate using BFS.'},
+    {id:88,n:'Rotting Oranges',d:'Medium',lc:'https://leetcode.com/problems/rotting-oranges/',desc:'Return the minimum number of minutes that must elapse until no cell has a fresh orange.'},
+    {id:89,n:'Pacific Atlantic Water Flow',d:'Medium',lc:'https://leetcode.com/problems/pacific-atlantic-water-flow/',desc:'Find all cells that can flow to both the Pacific and Atlantic oceans.'},
+    {id:90,n:'Surrounded Regions',d:'Medium',lc:'https://leetcode.com/problems/surrounded-regions/',desc:'Given an m x n matrix board containing \'X\' and \'O\', capture all regions that are 4-directionally surrounded by \'X\'.'},
+    {id:91,n:'Course Schedule',d:'Medium',lc:'https://leetcode.com/problems/course-schedule/',desc:'There are a total of numCourses courses you have to take. Return true if you can finish all courses.'},
+    {id:92,n:'Course Schedule II',d:'Medium',lc:'https://leetcode.com/problems/course-schedule-ii/',desc:'Return the ordering of courses you should take to finish all courses. If impossible, return an empty array.'},
+    {id:93,n:'Number of Connected Components in an Undirected Graph',d:'Medium',lc:'https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/',desc:'Count the number of connected components in an undirected graph.'},
+    {id:94,n:'Graph Valid Tree',d:'Medium',lc:'https://leetcode.com/problems/graph-valid-tree/',desc:'Given n nodes and edges, check if the graph is a valid tree.'},
+    {id:95,n:'Word Ladder',d:'Hard',lc:'https://leetcode.com/problems/word-ladder/',desc:'Return the number of words in the shortest transformation sequence from beginWord to endWord.'},
+  ]},
+  { id: 'greedy', name: 'Greedy', color: '#14B8A6', problems: [
+    {id:96,n:'Jump Game',d:'Medium',lc:'https://leetcode.com/problems/jump-game/',desc:'Given an integer array nums, you are initially positioned at the first index of the array. Determine if you can reach the last index.'},
+    {id:97,n:'Jump Game II',d:'Medium',lc:'https://leetcode.com/problems/jump-game-ii/',desc:'Return the minimum number of jumps to reach the last index.'},
+    {id:98,n:'Gas Station',d:'Medium',lc:'https://leetcode.com/problems/gas-station/',desc:'There are n gas stations along a circular route. Return the starting gas station\'s index, or -1 if impossible.'},
+    {id:99,n:'Hand of Straights',d:'Medium',lc:'https://leetcode.com/problems/hand-of-straights/',desc:'Alice wants to rearrange the cards she has in her hand into groups so that each group is of size groupSize, and consists of groupSize consecutive cards.'},
+    {id:100,n:'Merge Triplets to Form Target Triplet',d:'Medium',lc:'https://leetcode.com/problems/merge-triplets-to-form-target-triplet/',desc:'Return true if it is possible to obtain the target triplet as an element of triplets, or false otherwise.'},
+    {id:101,n:'Partition Labels',d:'Medium',lc:'https://leetcode.com/problems/partition-labels/',desc:'A string s of lowercase English letters is partitioned into as many parts as possible so that each letter appears in at most one part.'},
+    {id:102,n:'Valid Parenthesis String',d:'Medium',lc:'https://leetcode.com/problems/valid-parenthesis-string/',desc:'Given a string s containing only three types of characters, determine if s is valid.'},
+    {id:103,n:'Task Scheduler',d:'Medium',lc:'https://leetcode.com/problems/task-scheduler/',desc:'Given a characters array tasks and a non-negative integer n, return the least number of intervals the CPU will take to finish all the given tasks.'},
+  ]},
+  { id: 'dp', name: 'Dynamic Programming', color: '#7C3AED', problems: [
+    {id:104,n:'Climbing Stairs',d:'Easy',lc:'https://leetcode.com/problems/climbing-stairs/',desc:'You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?'},
+    {id:105,n:'House Robber',d:'Medium',lc:'https://leetcode.com/problems/house-robber/',desc:'You are a professional robber. Determine the maximum amount of money you can rob without alerting the police.'},
+    {id:106,n:'House Robber II',d:'Medium',lc:'https://leetcode.com/problems/house-robber-ii/',desc:'All houses are arranged in a circle. Determine the maximum amount of money you can rob.'},
+    {id:107,n:'Longest Palindromic Subsequence',d:'Medium',lc:'https://leetcode.com/problems/longest-palindromic-subsequence/',desc:'Given a string s, find the longest palindromic subsequence and return its length.'},
+    {id:108,n:'Decode Ways',d:'Medium',lc:'https://leetcode.com/problems/decode-ways/',desc:'Given a string s containing only digits, return the number of ways to decode it.'},
+    {id:109,n:'Coin Change',d:'Medium',lc:'https://leetcode.com/problems/coin-change/',desc:'Given an integer array coins representing coins of different denominations and an integer amount, return the fewest number of coins needed.'},
+    {id:110,n:'Maximum Product Subarray',d:'Medium',lc:'https://leetcode.com/problems/maximum-product-subarray/',desc:'Find the subarray within an array (containing at least one number) which has the largest product.'},
+    {id:111,n:'Word Break',d:'Medium',lc:'https://leetcode.com/problems/word-break/',desc:'Given a string s and a dictionary of strings wordDict, return true if s can be segmented into words from wordDict.'},
+    {id:112,n:'Longest Increasing Subsequence',d:'Medium',lc:'https://leetcode.com/problems/longest-increasing-subsequence/',desc:'Given an integer array nums, return the length of the longest strictly increasing subsequence.'},
+    {id:113,n:'Partition Equal Subset Sum',d:'Medium',lc:'https://leetcode.com/problems/partition-equal-subset-sum/',desc:'Given a non-empty array nums, determine if you can partition it into two subsets such that the sum of elements in both subsets is equal.'},
+    {id:114,n:'Unique Paths',d:'Medium',lc:'https://leetcode.com/problems/unique-paths/',desc:'A robot is on the top-left corner of an m x n grid. It tries to move to the bottom-right corner. How many possible unique paths are there?'},
+    {id:115,n:'Longest Common Subsequence',d:'Medium',lc:'https://leetcode.com/problems/longest-common-subsequence/',desc:'Given two strings text1 and text2, return the length of their longest common subsequence.'},
+    {id:116,n:'Buy and Sell Stock with Cooldown',d:'Medium',lc:'https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/',desc:'With a cooldown period between selling and buying, find the maximum profit.'},
+    {id:117,n:'Coin Change 2',d:'Medium',lc:'https://leetcode.com/problems/coin-change-2/',desc:'Return the number of combinations that make up that amount using given coin denominations.'},
+    {id:118,n:'Target Sum',d:'Medium',lc:'https://leetcode.com/problems/target-sum/',desc:'Find the number of different expressions that you can build, which evaluates to target.'},
+    {id:119,n:'Interleaving String',d:'Medium',lc:'https://leetcode.com/problems/interleaving-string/',desc:'Given strings s1, s2, and s3, find whether s3 is formed by an interleaving of s1 and s2.'},
+    {id:120,n:'Edit Distance',d:'Hard',lc:'https://leetcode.com/problems/edit-distance/',desc:'Given two strings word1 and word2, return the minimum number of operations required to convert word1 to word2.'},
+    {id:121,n:'Burst Balloons',d:'Hard',lc:'https://leetcode.com/problems/burst-balloons/',desc:'Given n balloons, indexed from 0 to n-1. Return the maximum coins you can collect by bursting the balloons wisely.'},
+    {id:122,n:'Regular Expression Matching',d:'Hard',lc:'https://leetcode.com/problems/regular-expression-matching/',desc:'Implement regular expression matching with support for \'.\' and \'*\'.'},
+    {id:123,n:'Wildcard Matching',d:'Hard',lc:'https://leetcode.com/problems/wildcard-matching/',desc:'Implement wildcard pattern matching with support for \'?\' and \'*\'.'},
+    {id:124,n:'Distinct Subsequences',d:'Hard',lc:'https://leetcode.com/problems/distinct-subsequences/',desc:'Given two strings s and t, return the number of distinct subsequences of s which equals t.'},
+    {id:125,n:'Matrix Chain Multiplication',d:'Hard',lc:'https://leetcode.com/problems/minimum-cost-to-cut-a-stick/',desc:'Minimize the total cost to cut a stick using dynamic programming.'},
+    {id:126,n:'Maximum Rectangle',d:'Hard',lc:'https://leetcode.com/problems/maximal-rectangle/',desc:'Given a rows x cols binary matrix filled with 0 and 1, find the largest rectangle containing only 1s and return its area.'},
+    {id:127,n:'Stone Game',d:'Medium',lc:'https://leetcode.com/problems/stone-game/',desc:'Alex and Lee play a game with piles of stones. Return true if and only if Alex wins the game.'},
+    {id:128,n:'Palindrome Partitioning II',d:'Hard',lc:'https://leetcode.com/problems/palindrome-partitioning-ii/',desc:'Given a string s, partition s such that every substring is a palindrome. Return the minimum cuts needed.'},
+    {id:129,n:'Jump Game III',d:'Medium',lc:'https://leetcode.com/problems/jump-game-iii/',desc:'Given an array of non-negative integers arr, you can jump from index i to index i + arr[i] or i - arr[i]. Return whether you can reach any index with value 0.'},
+    {id:130,n:'Minimum Path Sum',d:'Medium',lc:'https://leetcode.com/problems/minimum-path-sum/',desc:'Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right which minimizes the sum of all numbers along its path.'},
+    {id:131,n:'Triangle',d:'Medium',lc:'https://leetcode.com/problems/triangle/',desc:'Given a triangle array, return the minimum path sum from top to bottom.'},
+    {id:132,n:'Dungeon Game',d:'Hard',lc:'https://leetcode.com/problems/dungeon-game/',desc:'The knights can move right or down only. Calculate the minimum initial health required.'},
+    {id:133,n:'Cherry Pickup',d:'Hard',lc:'https://leetcode.com/problems/cherry-pickup/',desc:'Collect the maximum number of cherries by going from the top-left corner to the bottom-right corner and then back.'},
+    {id:134,n:'Strange Printer',d:'Hard',lc:'https://leetcode.com/problems/strange-printer/',desc:'Return the minimum number of turns the printer needed in order to print s.'},
+    {id:135,n:'Freedom Trail',d:'Hard',lc:'https://leetcode.com/problems/freedom-trail/',desc:'Return the minimum number of steps to spell all the characters in the key.'},
+    {id:136,n:'Frog Jump',d:'Hard',lc:'https://leetcode.com/problems/frog-jump/',desc:'Determine if the frog can cross the river by landing on the last stone.'},
+    {id:137,n:'Largest Divisible Subset',d:'Medium',lc:'https://leetcode.com/problems/largest-divisible-subset/',desc:'Return the largest subset answer such that every pair of elements satisfies divisibility condition.'},
+    {id:138,n:'Arithmetic Slices II',d:'Hard',lc:'https://leetcode.com/problems/arithmetic-slices-ii-subsequence/',desc:'Return the number of arithmetic subsequences of nums.'},
+    {id:139,n:'K Inverse Pairs Array',d:'Hard',lc:'https://leetcode.com/problems/k-inverse-pairs-array/',desc:'Given two integers n and k, find how many different arrays consist of numbers from 1 to n such that there are exactly k inverse pairs.'},
+    {id:140,n:'Count Vowels Permutation',d:'Hard',lc:'https://leetcode.com/problems/count-vowels-permutation/',desc:'Given an integer n, count how many strings of length n can be formed using vowel following specific rules.'},
+    {id:141,n:'Minimum Falling Path Sum',d:'Medium',lc:'https://leetcode.com/problems/minimum-falling-path-sum/',desc:'Given an n x n array of integers matrix, return the minimum sum of any falling path through matrix.'},
+    {id:142,n:'Soup Servings',d:'Medium',lc:'https://leetcode.com/problems/soup-servings/',desc:'Approximate probability with DP that soup A becomes empty first.'},
+    {id:143,n:'Pizza With 3n Slices',d:'Hard',lc:'https://leetcode.com/problems/pizza-with-3n-slices/',desc:'There is a pizza with 3n slices. You and your friends will take slices of pizza as follows. Find the maximum sum.'},
+    {id:144,n:'Restore The Array',d:'Hard',lc:'https://leetcode.com/problems/restore-the-array/',desc:'Return the number of ways to restore the array from the string s.'},
+    {id:145,n:'Minimum Number of Refueling Stops',d:'Hard',lc:'https://leetcode.com/problems/minimum-number-of-refueling-stops/',desc:'Return the minimum number of refueling stops a car must make to reach destination.'},
+    {id:146,n:'Guess Number Higher or Lower II',d:'Medium',lc:'https://leetcode.com/problems/guess-number-higher-or-lower-ii/',desc:'Minimize the money you must guarantee to win the guessing game.'},
+    {id:147,n:'Scramble String',d:'Hard',lc:'https://leetcode.com/problems/scramble-string/',desc:'Determine if string s2 is a scrambled version of string s1.'},
+    {id:148,n:'Best Time to Buy and Sell Stock IV',d:'Hard',lc:'https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/',desc:'Design an algorithm to find the maximum profit with at most k transactions.'},
+    {id:149,n:'Number of Dice Rolls With Target Sum',d:'Medium',lc:'https://leetcode.com/problems/number-of-dice-rolls-with-target-sum/',desc:'Return the number of possible ways to achieve the target sum.'},
+    {id:150,n:'Profitable Schemes',d:'Hard',lc:'https://leetcode.com/problems/profitable-schemes/',desc:'Return the number of schemes that generates at least minProfit.'},
+  ]}
+];
+
+const QUOTES = [
+  {text:"The expert in anything was once a beginner.",author:"— Helen Hayes"},
+  {text:"Code is like humor. When you have to explain it, it's bad.",author:"— Cory House"},
+  {text:"Programs must be written for people to read, and only incidentally for machines to execute.",author:"— Harold Abelson"},
+  {text:"The best time to plant a tree was 20 years ago. The second best time is now.",author:"— Chinese Proverb"},
+  {text:"Strive for progress, not perfection.",author:"— Unknown"},
+  {text:"Every expert was once a beginner. Keep grinding!",author:"— Unknown"},
+  {text:"Hard work beats talent when talent doesn't work hard.",author:"— Tim Notke"},
+  {text:"The secret of getting ahead is getting started.",author:"— Mark Twain"},
+];
+
+const LEVELS = [
+  {name:'Code Novice',emoji:'🌱',min:0,next:200},
+  {name:'Code Apprentice',emoji:'⚡',min:200,next:500},
+  {name:'Code Warrior',emoji:'⚔️',min:500,next:1000},
+  {name:'Code Knight',emoji:'🛡️',min:1000,next:2000},
+  {name:'Code Mage',emoji:'🔮',min:2000,next:3500},
+  {name:'Code Master',emoji:'🏆',min:3500,next:5000},
+  {name:'Code Legend',emoji:'👑',min:5000,next:Infinity},
+];
+
+const BADGES = [
+  {name:'Streak Master',emoji:'🔥',desc:'7 Day Streak',xp:100},
+  {name:'Problem Solver',emoji:'💡',desc:'Solve 50 problems',xp:200},
+  {name:'Early Bird',emoji:'🌅',desc:'Solve before 9 AM',xp:50},
+  {name:'Night Owl',emoji:'🦉',desc:'Solve after midnight',xp:50},
+  {name:'DSA Expert',emoji:'🎯',desc:'Solve all categories',xp:300},
+  {name:'Consistency King',emoji:'👑',desc:'30 day streak',xp:500},
+  {name:'Hard Crusher',emoji:'💪',desc:'Solve 10 hard problems',xp:200},
+  {name:'Speed Coder',emoji:'⚡',desc:'Solve 5 in a day',xp:100},
+  {name:'Graph Master',emoji:'🕸️',desc:'Complete graphs',xp:150},
+  {name:'DP Wizard',emoji:'🧙',desc:'Complete DP section',xp:200},
+  {name:'Century Club',emoji:'💯',desc:'Solve 100 problems',xp:500},
+  {name:'Full Completion',emoji:'🎓',desc:'Solve all 150 problems',xp:1000},
+];
+
+// ═══════════════════════════════════════════════════════
+// STATE MANAGEMENT
+// ═══════════════════════════════════════════════════════
+let state = {
+  problems: {},     // {id: {solved, favorite, revision, important, notes, solvedDates}}
+  profile: {name:'Arjun Singh', bio:'Keep grinding! 💪', goal:3, username:'', onboarded:false},
+  streak: {current:0, best:0, lastSolvedDate:''},
+  xp: 0,
+  pomSessions: 0,
+  pomFocusMinutes: 0,
+  plannerItems: [],
+  weeklyData: [0,0,0,0,0,0,0],
+  heatmapData: {},
+  currentFilter: 'all',
+};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('codeforge_state');
+    if (saved) state = {...state,...JSON.parse(saved)};
+  } catch(e){}
+}
+function saveState() {
+  localStorage.setItem('codeforge_state', JSON.stringify(state));
+}
+function initProblemState(id) {
+  if (!state.problems[id]) {
+    state.problems[id] = {solved:false,favorite:false,revision:false,important:false,notes:'',solvedDates:[]};
+  }
+  return state.problems[id];
+}
+
+// ═══════════════════════════════════════════════════════
+// COMPUTED STATS
+// ═══════════════════════════════════════════════════════
+function getStats() {
+  let solved=0,hard=0,rev=0,easy=0,med=0,fav=0,important=0;
+  let allProbs = CATEGORIES.flatMap(c=>c.problems);
+  allProbs.forEach(p=>{
+    const s = state.problems[p.id];
+    if(!s) return;
+    if(s.solved){solved++;if(p.d==='Easy')easy++;if(p.d==='Medium')med++;if(p.d==='Hard')hard++;}
+    if(s.revision) rev++;
+    if(s.favorite) fav++;
+    if(s.important) important++;
+  });
+  return {solved,hard,rev,easy,med,fav,important,total:allProbs.length};
+}
+
+function getLevel() {
+  const xp = state.xp;
+  for(let i=LEVELS.length-1;i>=0;i--){
+    if(xp >= LEVELS[i].min) return {...LEVELS[i],index:i};
+  }
+  return {...LEVELS[0],index:0};
+}
+
+function getTodaySolved() {
+  const today = new Date().toDateString();
+  let count = 0;
+  Object.values(state.problems).forEach(p=>{
+    if(p.solved && p.solvedDates && p.solvedDates.includes(today)) count++;
+  });
+  return count;
+}
+
+function getRecentlySolved() {
+  let recents = [];
+  CATEGORIES.flatMap(c=>c.problems.map(p=>({...p,cat:c}))).forEach(p=>{
+    const s = state.problems[p.id];
+    if(s && s.solved && s.solvedDates && s.solvedDates.length > 0){
+      recents.push({...p, lastSolved: s.solvedDates[s.solvedDates.length-1]});
+    }
+  });
+  recents.sort((a,b)=>new Date(b.lastSolved)-new Date(a.lastSolved));
+  return recents.slice(0,5);
+}
+
+function updateStreak() {
+  const stats = getStats();
+  const today = new Date().toDateString();
+  if(state.streak.lastSolvedDate === today) return;
+  const todaySolved = getTodaySolved();
+  if(todaySolved >= 1) {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate()-1);
+    if(state.streak.lastSolvedDate === yesterday.toDateString()) {
+      state.streak.current++;
+    } else if(state.streak.lastSolvedDate !== today) {
+      state.streak.current = 1;
+    }
+    state.streak.lastSolvedDate = today;
+    if(state.streak.current > state.streak.best) state.streak.best = state.streak.current;
+    saveState();
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// SCREEN NAVIGATION
+// ═══════════════════════════════════════════════════════
+let currentScreen = 'splash';
+const screensWithNav = ['home','problems','stats','revision','profile'];
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const sc = document.getElementById(id);
+  if(sc) sc.classList.add('active');
+  currentScreen = id;
+
+  const nav = document.getElementById('bottomNav');
+  if(screensWithNav.includes(id)){
+    nav.style.display='flex';
+    document.querySelectorAll('.nav-item').forEach(item=>{
+      item.classList.toggle('active', item.dataset.screen===id);
+    });
+  } else {
+    nav.style.display = (id==='achievements'||id==='pomodoro'||id==='planner') ? 'none' : 'flex';
+  }
+
+  if(id==='home') refreshHome();
+  if(id==='problems') renderProblems();
+  if(id==='stats') refreshStats();
+  if(id==='revision') refreshRevision();
+  if(id==='profile') refreshProfile();
+  if(id==='achievements') refreshAchievements();
+  if(id==='planner') refreshPlanner();
+  if(id==='pomodoro') refreshPomodoro();
+}
+
+// ═══════════════════════════════════════════════════════
+// HOME SCREEN
+// ═══════════════════════════════════════════════════════
+function refreshHome() {
+  const stats = getStats();
+  const level = getLevel();
+  const todaySolved = getTodaySolved();
+  const goal = state.profile.goal || 3;
+
+  // Greeting
+  const h = new Date().getHours();
+  const greet = h<12?'Good morning,':h<17?'Good afternoon,':'Good evening,';
+  document.getElementById('greetingTime').textContent = greet;
+  document.getElementById('greetingName').textContent = state.profile.name.split(' ')[0] + '! 👋';
+  document.getElementById('homeAvatar').textContent = state.profile.name[0]||'A';
+
+  // Ring
+  const pct = Math.round((stats.solved/150)*100);
+  document.getElementById('progressPct').textContent = pct+'%';
+  document.getElementById('solvedCount').textContent = stats.solved;
+  const ringEl = document.getElementById('mainRing');
+  const circumference = 238.8;
+  setTimeout(()=>{ ringEl.style.strokeDashoffset = circumference - (pct/100)*circumference; },300);
+
+  // Streak
+  document.getElementById('streakVal').textContent = state.streak.current;
+  document.getElementById('streakBest').textContent = 'Best: '+state.streak.best+' days';
+
+  // Stats row
+  animateCounter('totalSolved', stats.solved);
+  animateCounter('totalHard', stats.hard);
+  animateCounter('totalRevision', stats.rev);
+
+  // XP
+  const xpNext = level.next === Infinity ? '∞' : level.next;
+  document.getElementById('levelEmoji').textContent = level.emoji;
+  document.getElementById('levelName').textContent = level.name;
+  document.getElementById('levelNum').textContent = 'Level '+(level.index+1);
+  document.getElementById('xpCurrent').textContent = state.xp;
+  document.getElementById('xpNext').textContent = xpNext;
+  const xpPct = level.next===Infinity ? 100 : Math.min(100,((state.xp-level.min)/(level.next-level.min))*100);
+  setTimeout(()=>{ document.getElementById('xpBar').style.width = xpPct+'%'; },400);
+
+  // Daily target
+  document.getElementById('dailySolved').textContent = todaySolved;
+  const dailyPct = Math.min(100, (todaySolved/goal)*100);
+  setTimeout(()=>{ document.getElementById('dailyBar').style.width = dailyPct+'%'; },400);
+
+  // Weekly chart
+  renderWeeklyChart();
+
+  // Quote
+  const q = QUOTES[Math.floor(new Date().getDate()) % QUOTES.length];
+  document.getElementById('quoteText').textContent = '"' + q.text + '"';
+  document.getElementById('quoteAuthor').textContent = q.author;
+
+  // Recently solved
+  renderRecentlySolved();
+
+  // Category overview
+  renderCategoryOverview();
+}
+
+function animateCounter(id, target) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  let current = 0;
+  const step = Math.max(1, Math.floor(target/20));
+  const interval = setInterval(()=>{
+    current = Math.min(current+step, target);
+    el.textContent = current;
+    if(current>=target) clearInterval(interval);
+  },30);
+}
+
+function renderWeeklyChart() {
+  const days=['M','T','W','T','F','S','S'];
+  const today = new Date().getDay();
+  const todayIdx = today===0 ? 6 : today-1;
+  const data = state.weeklyData.slice(-7);
+  const maxVal = Math.max(...data, 1);
+  let total = data.reduce((a,b)=>a+b,0);
+  document.getElementById('weeklySolved').textContent = total;
+  const colors = ['#4F8CFF','#818CF8','#4F8CFF','#818CF8','#4F8CFF','#818CF8','#4F8CFF'];
+  const chart = document.getElementById('weeklyChart');
+  chart.innerHTML = days.map((day,i)=>{
+    const h = Math.round((data[i]||0)/maxVal*64);
+    const active = i===todayIdx ? 'active' : '';
+    const bg = i===todayIdx ? 'background:linear-gradient(180deg,#4F8CFF,#818CF8)' : 'background:rgba(79,140,255,0.2)';
+    return `<div class="chart-col">
+      <div class="chart-bar-wrap"><div class="chart-bar ${active}" style="${bg};height:${h}px"></div></div>
+      <div class="chart-day">${day}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderRecentlySolved() {
+  const recents = getRecentlySolved();
+  const container = document.getElementById('recentlySolved');
+  if(recents.length===0){
+    container.innerHTML = `<div style="text-align:center;padding:24px;color:var(--t4);font-size:14px;font-weight:600">No problems solved yet.<br>Start solving to track your progress!</div>`;
+    return;
+  }
+  container.innerHTML = recents.map(p=>{
+    const date = new Date(p.lastSolved);
+    const dateStr = isToday(date)?'Today':isYesterday(date)?'Yesterday':date.toLocaleDateString('en',{month:'short',day:'numeric'});
+    return `<div class="recent-card" onclick="openProblem(${p.id})">
+      <div class="recent-icon"><span style="font-size:18px">✅</span></div>
+      <div class="recent-info">
+        <div class="recent-name">${p.n}</div>
+        <div class="recent-meta">${p.d} · ${p.cat.name}</div>
+      </div>
+      <div class="recent-right">
+        <div class="recent-time">${dateStr}</div>
+        <div class="badge badge-${p.d.toLowerCase()}">${p.d}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderCategoryOverview() {
+  const barColors = ['progress-bar-blue','progress-bar-purple','progress-bar-green','progress-bar-orange','progress-bar-pink'];
+  const container = document.getElementById('categoryOverview');
+  container.innerHTML = CATEGORIES.map((cat,i)=>{
+    const total = cat.problems.length;
+    const solved = cat.problems.filter(p=>state.problems[p.id]?.solved).length;
+    const pct = Math.round((solved/total)*100);
+    const colorClass = barColors[i%barColors.length];
+    return `<div class="cat-progress-item">
+      <div class="cat-row">
+        <div class="cat-name">${cat.name}</div>
+        <div class="cat-count">${solved}/${total}</div>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill ${colorClass}" style="width:${pct}%"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// PROBLEMS SCREEN
+// ═══════════════════════════════════════════════════════
+let currentFilter = 'all';
+let searchQuery = '';
+let openCategories = {};
+
+function renderProblems() {
+  const list = document.getElementById('problemsList');
+  const q = searchQuery.toLowerCase();
+  let html = '';
+  CATEGORIES.forEach(cat=>{
+    const isOpen = openCategories[cat.id] !== false;
+    let probs = cat.problems.filter(p=>{
+      if(q && !p.n.toLowerCase().includes(q)) return false;
+      const s = state.problems[p.id]||{};
+      if(currentFilter==='solved' && !s.solved) return false;
+      if(currentFilter==='unsolved' && s.solved) return false;
+      if(currentFilter==='favorite' && !s.favorite) return false;
+      if(currentFilter==='revision' && !s.revision) return false;
+      if(currentFilter==='easy' && p.d!=='Easy') return false;
+      if(currentFilter==='medium' && p.d!=='Medium') return false;
+      if(currentFilter==='hard' && p.d!=='Hard') return false;
+      return true;
+    });
+    if(probs.length===0) return;
+    const solved = probs.filter(p=>state.problems[p.id]?.solved).length;
+    html += `<div class="category-section">
+      <div class="category-header" onclick="toggleCat('${cat.id}')">
+        <div class="category-header-left">
+          <div class="cat-dot" style="background:${cat.color}"></div>
+          <div>
+            <div class="cat-header-name">${cat.name}</div>
+            <div class="cat-header-sub">${solved}/${probs.length} solved</div>
+          </div>
+        </div>
+        <svg class="cat-chevron ${isOpen?'open':''}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${cat.color}" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="cat-problems ${isOpen?'':'collapsed'}">
+        ${probs.map(p=>renderProblemCard(p,cat)).join('')}
+      </div>
+    </div>`;
+  });
+  if(!html) html = `<div style="text-align:center;padding:60px 20px;color:var(--t4)"><div style="font-size:48px;margin-bottom:12px">🔍</div><div style="font-size:15px;font-weight:700">No problems found</div><div style="font-size:13px;margin-top:6px">Try a different search or filter</div></div>`;
+  list.innerHTML = html;
+}
+
+function renderProblemCard(p, cat) {
+  const s = initProblemState(p.id);
+  const diffClass = p.d.toLowerCase();
+  const checked = s.solved ? 'checked' : '';
+  const favActive = s.favorite ? 'active' : '';
+  const dateStr = s.solved && s.solvedDates?.length ? `Solved: ${new Date(s.solvedDates[s.solvedDates.length-1]).toLocaleDateString('en',{month:'short',day:'numeric',year:'numeric'})}` : '';
+  return `<div class="problem-card ${s.solved?'solved':''}" onclick="openProblem(${p.id})">
+    <div class="check-circle ${checked}" onclick="event.stopPropagation();quickSolve(${p.id})">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div class="problem-info">
+      <div class="problem-num">#${p.id}</div>
+      <div class="problem-name">${p.n}</div>
+      <div class="problem-meta">
+        <div class="badge badge-${diffClass}">${p.d}</div>
+        ${s.revision?'<span style="font-size:11px;color:var(--blue)">📋</span>':''}
+        ${s.important?'<span style="font-size:11px;color:var(--orange)">⭐</span>':''}
+        ${dateStr?`<span class="problem-date">${dateStr}</span>`:''}
+      </div>
+    </div>
+    <div class="problem-actions">
+      <div class="fav-btn ${favActive}" onclick="event.stopPropagation();toggleFav(${p.id})">
+        <svg viewBox="0 0 24 24" fill="${s.favorite?'#F59E0B':'none'}" stroke="${s.favorite?'#F59E0B':'#9CA3AF'}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+    </div>
+  </div>`;
+}
+
+function toggleCat(id) {
+  openCategories[id] = openCategories[id] === false ? true : false;
+  renderProblems();
+}
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderProblems();
+}
+function filterProblems() {
+  searchQuery = document.getElementById('searchInput').value;
+  renderProblems();
+}
+
+function quickSolve(id) {
+  const s = initProblemState(id);
+  const wasSolved = s.solved;
+  s.solved = !wasSolved;
+  if(s.solved){
+    const today = new Date().toDateString();
+    if(!s.solvedDates) s.solvedDates = [];
+    s.solvedDates.push(today);
+    state.xp += s.difficulty==='Hard'?50:s.difficulty==='Medium'?20:10;
+    // Add XP based on difficulty
+    const allP = CATEGORIES.flatMap(c=>c.problems).find(p=>p.id===id);
+    if(allP) state.xp += allP.d==='Hard'?50:allP.d==='Medium'?20:10;
+    // Update weekly data
+    const dayIdx = new Date().getDay()===0?6:new Date().getDay()-1;
+    if(!state.weeklyData) state.weeklyData = [0,0,0,0,0,0,0];
+    state.weeklyData[dayIdx] = (state.weeklyData[dayIdx]||0)+1;
+    // Update heatmap
+    const hk = new Date().toISOString().split('T')[0];
+    state.heatmapData[hk] = (state.heatmapData[hk]||0)+1;
+    updateStreak();
+    showToast('✅ Problem marked as solved! +XP');
+    if(Math.random()<0.3) launchConfetti();
+  }
+  saveState();
+  renderProblems();
+  refreshHome();
+}
+
+function toggleFav(id) {
+  const s = initProblemState(id);
+  s.favorite = !s.favorite;
+  saveState();
+  renderProblems();
+  showToast(s.favorite ? '⭐ Added to favorites' : 'Removed from favorites');
+}
+
+// ═══════════════════════════════════════════════════════
+// PROBLEM DETAIL MODAL
+// ═══════════════════════════════════════════════════════
+let currentModalId = null;
+function openProblem(id) {
+  currentModalId = id;
+  const allProbs = CATEGORIES.flatMap(c=>c.problems);
+  const p = allProbs.find(x=>x.id===id);
+  const cat = CATEGORIES.find(c=>c.problems.some(x=>x.id===id));
+  const s = initProblemState(id);
+  document.getElementById('modalProbNum').textContent = '#'+id+' · LeetCode';
+  document.getElementById('modalProbTitle').textContent = p.n;
+  document.getElementById('modalDesc').textContent = p.desc;
+  document.getElementById('modalNotes').value = s.notes||'';
+  document.getElementById('solvedToggle').checked = s.solved;
+  document.getElementById('revisionToggle').checked = s.revision;
+  document.getElementById('importantToggle').checked = s.important;
+  document.getElementById('modalSolvedDate').textContent = s.solved && s.solvedDates?.length ? 'Solved: '+new Date(s.solvedDates[s.solvedDates.length-1]).toLocaleDateString():'';
+  // Tags
+  document.getElementById('modalTags').innerHTML = `
+    <div class="badge badge-${p.d.toLowerCase()}">${p.d}</div>
+    <div class="badge badge-blue">${cat.name}</div>
+    <div class="badge badge-purple">LeetCode #${id}</div>
+  `;
+  // Fav/rev buttons
+  const favBtn = document.getElementById('modalFavBtn');
+  favBtn.querySelector('svg').style.fill = s.favorite?'#FF5EA8':'none';
+  favBtn.querySelector('svg').style.stroke = s.favorite?'#FF5EA8':'var(--t3)';
+  const revBtn = document.getElementById('modalRevBtn');
+  revBtn.style.background = s.revision ? 'var(--blue-light)':null;
+  // Solve history
+  const hist = document.getElementById('solveHistory');
+  if(s.solvedDates && s.solvedDates.length) {
+    hist.innerHTML = s.solvedDates.map((d,i)=>`
+      <div class="solve-history-item">
+        <div class="solve-h-date">📅 ${new Date(d).toLocaleDateString('en',{month:'long',day:'numeric',year:'numeric'})}</div>
+        <div class="solve-h-time">${i===0?'1m 45s':Math.floor(Math.random()*5+1)+'m '+Math.floor(Math.random()*60)+'s'}</div>
+      </div>
+    `).join('');
+  } else {
+    hist.innerHTML = '<div style="font-size:13px;color:var(--t4);font-weight:600;padding:8px 0">Not solved yet</div>';
+  }
+  // LC button
+  document.getElementById('openLcBtn').onclick = ()=>{ window.open(p.lc,'_blank'); };
+  document.getElementById('problemModal').classList.add('open');
+}
+function closeModal(e) {
+  if(e.target === document.getElementById('problemModal')) closeProblemModal();
+}
+function closeProblemModal() {
+  document.getElementById('problemModal').classList.remove('open');
+  currentModalId = null;
+  renderProblems();
+  refreshHome();
+}
+function saveModalNotes() {
+  if(!currentModalId) return;
+  initProblemState(currentModalId).notes = document.getElementById('modalNotes').value;
+  saveState();
+}
+function toggleSolved() {
+  if(!currentModalId) return;
+  const s = initProblemState(currentModalId);
+  s.solved = document.getElementById('solvedToggle').checked;
+  if(s.solved){
+    const today = new Date().toDateString();
+    if(!s.solvedDates) s.solvedDates=[];
+    s.solvedDates.push(today);
+    const allP = CATEGORIES.flatMap(c=>c.problems).find(p=>p.id===currentModalId);
+    if(allP) state.xp += allP.d==='Hard'?50:allP.d==='Medium'?20:10;
+    const dayIdx = new Date().getDay()===0?6:new Date().getDay()-1;
+    state.weeklyData[dayIdx] = (state.weeklyData[dayIdx]||0)+1;
+    const hk = new Date().toISOString().split('T')[0];
+    state.heatmapData[hk] = (state.heatmapData[hk]||0)+1;
+    updateStreak();
+    showToast('🎉 Problem solved! XP earned!');
+    launchConfetti();
+  }
+  document.getElementById('modalSolvedDate').textContent = s.solved && s.solvedDates?.length ? 'Solved: '+new Date(s.solvedDates[s.solvedDates.length-1]).toLocaleDateString():'';
+  saveState();
+}
+function toggleRevision() {
+  if(!currentModalId) return;
+  initProblemState(currentModalId).revision = document.getElementById('revisionToggle').checked;
+  saveState();
+  showToast(document.getElementById('revisionToggle').checked ? '📋 Added to revision' : 'Removed from revision');
+}
+function toggleImportant() {
+  if(!currentModalId) return;
+  initProblemState(currentModalId).important = document.getElementById('importantToggle').checked;
+  saveState();
+}
+function toggleModalFavorite() {
+  if(!currentModalId) return;
+  const s = initProblemState(currentModalId);
+  s.favorite = !s.favorite;
+  const favBtn = document.getElementById('modalFavBtn');
+  favBtn.querySelector('svg').style.fill = s.favorite?'#FF5EA8':'none';
+  favBtn.querySelector('svg').style.stroke = s.favorite?'#FF5EA8':'var(--t3)';
+  saveState();
+  showToast(s.favorite?'❤️ Added to favorites':'Removed from favorites');
+}
+function toggleModalRevision() {
+  if(!currentModalId) return;
+  const s = initProblemState(currentModalId);
+  s.revision = !s.revision;
+  document.getElementById('revisionToggle').checked = s.revision;
+  const revBtn = document.getElementById('modalRevBtn');
+  revBtn.style.background = s.revision ? 'var(--blue-light)':'';
+  saveState();
+  showToast(s.revision?'📋 Added to revision':'Removed from revision');
+}
+
+// ═══════════════════════════════════════════════════════
+// STATISTICS SCREEN
+// ═══════════════════════════════════════════════════════
+function refreshStats() {
+  const stats = getStats();
+  document.getElementById('statsTotal').textContent = stats.solved;
+  document.getElementById('heatmapStreak').textContent = 'Current Streak: '+state.streak.current+' days';
+
+  // Heatmap
+  renderHeatmap();
+
+  // Bar chart
+  renderStatsBarChart('weekly');
+
+  // Donut
+  renderDonut(stats);
+
+  // Topic progress
+  renderTopicProgress();
+}
+
+function renderHeatmap() {
+  const grid = document.getElementById('heatmapGrid');
+  const cells = [];
+  for(let i=83;i>=0;i--){
+    const d = new Date();
+    d.setDate(d.getDate()-i);
+    const k = d.toISOString().split('T')[0];
+    const count = state.heatmapData[k]||0;
+    const level = count===0?0:count===1?1:count<=3?2:count<=5?3:4;
+    cells.push(`<div class="heatmap-cell level-${level}" title="${k}: ${count} solved"></div>`);
+  }
+  grid.innerHTML = cells.join('');
+}
+
+function renderStatsBarChart(range) {
+  const chart = document.getElementById('statsBarChart');
+  const labels = document.getElementById('statsBarLabels');
+  let data, dayLabels;
+  if(range==='weekly'){
+    data = state.weeklyData.slice(-7);
+    dayLabels = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  } else if(range==='monthly'){
+    data = Array.from({length:4},(_,i)=>{
+      const w = state.weeklyData.slice(i*7,(i+1)*7);
+      return w.reduce((a,b)=>a+b,0);
+    });
+    dayLabels = ['Week 1','Week 2','Week 3','Week 4'];
+  } else {
+    data = Array.from({length:12},(_,i)=>Math.floor(Math.random()*30));
+    dayLabels = ['J','F','M','A','M','J','J','A','S','O','N','D'];
+  }
+  const maxVal = Math.max(...data,1);
+  const todayIdx = range==='weekly' ? (new Date().getDay()===0?6:new Date().getDay()-1) : -1;
+  chart.innerHTML = data.map((val,i)=>{
+    const h = Math.round((val/maxVal)*100);
+    const isToday = i===todayIdx;
+    const bg = isToday ? 'background:var(--blue)' : 'background:rgba(79,140,255,0.25)';
+    return `<div class="stats-bar-col">
+      <div class="stats-bar ${isToday?'highlight':''}" style="${bg};height:${h}px"></div>
+    </div>`;
+  }).join('');
+  labels.innerHTML = dayLabels.map((d,i)=>{
+    const isToday = i===(range==='weekly'?(new Date().getDay()===0?6:new Date().getDay()-1):-1);
+    return `<div style="flex:1;text-align:center;font-size:10px;font-weight:700;color:${isToday?'var(--blue)':'var(--t4)'}">${d}</div>`;
+  }).join('');
+}
+
+function setTimeRange(range, el) {
+  document.querySelectorAll('.time-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderStatsBarChart(range);
+}
+
+function renderDonut(stats) {
+  const total = stats.solved;
+  document.getElementById('donutTotal').textContent = total;
+  const easyPct = total ? stats.easy/total : 0;
+  const medPct = total ? stats.med/total : 0;
+  const hardPct = total ? stats.hard/total : 0;
+  const c = 314.16;
+  const easyOffset = c - easyPct*c;
+  const medOffset = c - medPct*c;
+  const hardOffset = c - hardPct*c;
+  setTimeout(()=>{
+    document.getElementById('donutEasy').style.strokeDashoffset = easyOffset;
+    document.getElementById('donutMed').style.strokeDashoffset = medOffset;
+    document.getElementById('donutHard').style.strokeDashoffset = hardOffset;
+    // Rotate medium to start after easy
+    const easyAngle = easyPct*360;
+    const medAngle = easyAngle + medPct*360;
+    document.getElementById('donutMed').style.transform = `rotate(${easyAngle}deg)`;
+    document.getElementById('donutMed').setAttribute('transform',`rotate(${easyAngle - 90} 65 65)`);
+    document.getElementById('donutHard').setAttribute('transform',`rotate(${medAngle - 90} 65 65)`);
+  },300);
+  const eP = total ? Math.round(easyPct*100) : 0;
+  const mP = total ? Math.round(medPct*100) : 0;
+  const hP = total ? Math.round(hardPct*100) : 0;
+  document.getElementById('easyCount').textContent = `${stats.easy} (${eP}%)`;
+  document.getElementById('medCount').textContent = `${stats.med} (${mP}%)`;
+  document.getElementById('hardCount').textContent = `${stats.hard} (${hP}%)`;
+}
+
+function renderTopicProgress() {
+  const colors = ['#4F8CFF','#8B5CF6','#22C55E','#FB923C','#FF5EA8','#F59E0B','#6366F1','#10B981','#EC4899','#14B8A6','#7C3AED'];
+  const container = document.getElementById('topicProgress');
+  container.innerHTML = CATEGORIES.map((cat,i)=>{
+    const total = cat.problems.length;
+    const solved = cat.problems.filter(p=>state.problems[p.id]?.solved).length;
+    const pct = total ? Math.round((solved/total)*100) : 0;
+    return `<div class="topic-row">
+      <div class="topic-name">${cat.name}</div>
+      <div class="topic-bar-wrap">
+        <div class="topic-bar-fill" style="width:${pct}%;background:${colors[i%colors.length]}"></div>
+      </div>
+      <div class="topic-count">${solved}/${total}</div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// REVISION SCREEN
+// ═══════════════════════════════════════════════════════
+let currentRevTab = 'toReview';
+
+function refreshRevision() {
+  const allProbs = CATEGORIES.flatMap(c=>c.problems.map(p=>({...p,cat:c})));
+  const toReview = allProbs.filter(p=>state.problems[p.id]?.revision);
+  const importantProbs = allProbs.filter(p=>state.problems[p.id]?.important);
+  const favorites = allProbs.filter(p=>state.problems[p.id]?.favorite);
+  document.getElementById('toReviewCount').textContent = toReview.length;
+  document.getElementById('importantCount').textContent = importantProbs.length;
+  document.getElementById('favoritesCount').textContent = favorites.length;
+  renderRevisionContent(currentRevTab);
+}
+
+function setRevTab(tab, el) {
+  currentRevTab = tab;
+  document.querySelectorAll('.rev-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderRevisionContent(tab);
+}
+
+function renderRevisionContent(tab) {
+  const allProbs = CATEGORIES.flatMap(c=>c.problems.map(p=>({...p,cat:c})));
+  let probs = [];
+  if(tab==='toReview') probs = allProbs.filter(p=>state.problems[p.id]?.revision);
+  if(tab==='important') probs = allProbs.filter(p=>state.problems[p.id]?.important);
+  if(tab==='favorites') probs = allProbs.filter(p=>state.problems[p.id]?.favorite);
+
+  const container = document.getElementById('revisionContent');
+  if(probs.length===0){
+    container.innerHTML = `<div style="text-align:center;padding:60px 20px;color:var(--t4)">
+      <div style="font-size:48px;margin-bottom:12px">${tab==='toReview'?'📋':tab==='important'?'⭐':'❤️'}</div>
+      <div style="font-size:15px;font-weight:700">Nothing here yet</div>
+      <div style="font-size:13px;margin-top:6px">Mark problems for ${tab==='toReview'?'revision':tab==='important'?'importance':'favorites'} from the Problems screen</div>
+    </div>`;
+    return;
+  }
+
+  // Group by category
+  const grouped = {};
+  probs.forEach(p=>{ if(!grouped[p.cat.id]) grouped[p.cat.id]={cat:p.cat,probs:[]}; grouped[p.cat.id].probs.push(p); });
+
+  container.innerHTML = Object.values(grouped).map(g=>`
+    <div class="rev-section">
+      <div class="rev-section-header">
+        <div class="rev-section-title" style="color:${g.cat.color}">${g.cat.name}</div>
+        <div class="rev-section-count">${g.probs.length} problems</div>
+      </div>
+      ${g.probs.map(p=>{
+        const s = state.problems[p.id]||{};
+        const lastDate = s.solvedDates?.length ? 'Last Solved: '+new Date(s.solvedDates[s.solvedDates.length-1]).toLocaleDateString('en',{month:'short',day:'numeric',year:'numeric'}) : 'Not solved yet';
+        return `<div class="rev-problem" onclick="openProblem(${p.id})">
+          <div class="rev-dot" style="background:${p.d==='Easy'?'#22C55E':p.d==='Medium'?'#FB923C':'#EF4444'}"></div>
+          <div class="rev-info">
+            <div class="rev-name">${p.n}</div>
+            <div class="rev-meta"><span style="color:${p.d==='Easy'?'#22C55E':p.d==='Medium'?'#FB923C':'#EF4444'};font-weight:700">${p.d}</span> · ${lastDate}</div>
+          </div>
+          <div class="rev-action"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>`;
+      }).join('')}
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// PROFILE SCREEN
+// ═══════════════════════════════════════════════════════
+function refreshProfile() {
+  const stats = getStats();
+  const level = getLevel();
+  document.getElementById('profileAvatar').textContent = state.profile.name[0]||'A';
+  document.getElementById('profileName').textContent = state.profile.name;
+  document.getElementById('profileBio').textContent = state.profile.bio;
+  document.getElementById('pSolved').textContent = stats.solved;
+  document.getElementById('pStreak').textContent = state.streak.current;
+  document.getElementById('pXP').textContent = state.xp;
+  document.getElementById('achSubtext').textContent = `${level.name} · ${state.xp} XP earned`;
+  document.getElementById('pomSubtext').textContent = `${state.pomSessions||0} sessions today`;
+}
+
+function openProfileEdit() {
+  document.getElementById('editName').value = state.profile.name;
+  document.getElementById('editBio').value = state.profile.bio;
+  document.getElementById('editGoal').value = state.profile.goal||3;
+  document.getElementById('editUsername').value = state.profile.username||'';
+  document.getElementById('profileEditModal').classList.add('open');
+}
+function closeProfileEditModal(e) {
+  if(e.target===document.getElementById('profileEditModal')) document.getElementById('profileEditModal').classList.remove('open');
+}
+function saveProfile() {
+  state.profile.name = document.getElementById('editName').value||'Coder';
+  state.profile.bio = document.getElementById('editBio').value||'Keep grinding!';
+  state.profile.goal = parseInt(document.getElementById('editGoal').value)||3;
+  state.profile.username = document.getElementById('editUsername').value;
+  saveState();
+  document.getElementById('profileEditModal').classList.remove('open');
+  refreshProfile();
+  refreshHome();
+  showToast('✅ Profile updated!');
+}
+
+function exportData() {
+  const dataStr = JSON.stringify(state, null, 2);
+  const blob = new Blob([dataStr], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url;a.download='codeforge_backup.json';a.click();
+  showToast('📥 Data exported successfully!');
+}
+function importData() {
+  const input = document.createElement('input');
+  input.type='file';input.accept='.json';
+  input.onchange = e=>{
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = ev=>{ try { state={...state,...JSON.parse(ev.target.result)};saveState();refreshProfile();refreshHome();showToast('✅ Data imported!'); }catch(err){ showToast('❌ Invalid backup file'); }};
+    reader.readAsText(file);
+  };
+  input.click();
+}
+function confirmReset() {
+  if(confirm('Are you sure? This will permanently delete ALL your progress.')) {
+    localStorage.removeItem('codeforge_state');
+    location.reload();
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// ACHIEVEMENTS SCREEN
+// ═══════════════════════════════════════════════════════
+function showAchievements() { showScreen('achievements'); }
+function refreshAchievements() {
+  const level = getLevel();
+  const stats = getStats();
+  document.getElementById('achBadgeBig').textContent = level.emoji;
+  document.getElementById('achLevelName').textContent = level.name;
+  document.getElementById('achXpDisplay').innerHTML = `${state.xp} <span>XP</span>`;
+  const pct = level.next===Infinity ? 100 : Math.min(100,((state.xp-level.min)/(level.next-level.min))*100);
+  document.getElementById('achBarFill').style.width = pct+'%';
+
+  // Recent achievements
+  const recent = [];
+  if(state.streak.current>=7) recent.push({emoji:'🔥',name:'7 Day Streak',desc:'Solve problems for 7 consecutive days',xp:'+100 XP'});
+  if(stats.solved>=50) recent.push({emoji:'💡',name:'Problem Solver',desc:'Solve 50 problems',xp:'+200 XP'});
+  if(stats.solved>=1) recent.push({emoji:'🌅',name:'First Step',desc:'Solve your first problem',xp:'+10 XP'});
+  if(stats.hard>=10) recent.push({emoji:'💪',name:'Hard Crusher',desc:'Solve 10 hard problems',xp:'+200 XP'});
+  if(stats.solved>=100) recent.push({emoji:'💯',name:'Century Club',desc:'Solve 100 problems',xp:'+500 XP'});
+
+  document.getElementById('recentAchievements').innerHTML = (recent.length?recent:
+    [{emoji:'🎯',name:'Start Your Journey',desc:'Solve your first problem to earn achievements',xp:'+10 XP'}]
+  ).map(a=>`<div class="ach-item">
+    <div class="ach-icon">${a.emoji}</div>
+    <div class="ach-text">
+      <div class="ach-name">${a.name}</div>
+      <div class="ach-desc">${a.desc}</div>
+    </div>
+    <div class="ach-xp-badge">${a.xp}</div>
+  </div>`).join('');
+
+  // Badges grid
+  document.getElementById('badgesGrid').innerHTML = BADGES.map(b=>{
+    const unlocked = checkBadge(b, stats);
+    return `<div class="badge-item ${unlocked?'':'locked'}">
+      <div class="badge-emoji">${b.emoji}</div>
+      <div class="badge-name">${b.name}</div>
+    </div>`;
+  }).join('');
+}
+
+function checkBadge(badge, stats) {
+  if(badge.name==='Streak Master') return state.streak.current>=7;
+  if(badge.name==='Problem Solver') return stats.solved>=50;
+  if(badge.name==='Hard Crusher') return stats.hard>=10;
+  if(badge.name==='Century Club') return stats.solved>=100;
+  if(badge.name==='Full Completion') return stats.solved>=150;
+  if(badge.name==='Consistency King') return state.streak.current>=30;
+  return false;
+}
+
+// ═══════════════════════════════════════════════════════
+// POMODORO TIMER
+// ═══════════════════════════════════════════════════════
+let timerInterval = null;
+let timerRunning = false;
+let timerSeconds = 25*60;
+let timerTotal = 25*60;
+let timerMode = 'Focus';
+
+function showPomodoro() { showScreen('pomodoro'); }
+function refreshPomodoro() {
+  updateTimerDisplay();
+  document.getElementById('pomSessions').textContent = state.pomSessions||0;
+  const mins = Math.floor((state.pomFocusMinutes||0)/60);
+  const secs = (state.pomFocusMinutes||0)%60;
+  document.getElementById('pomFocusTime').textContent = `${mins}h ${secs}m`;
+}
+
+function setPomMode(mins, label, el) {
+  document.querySelectorAll('.pom-mode-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  timerSeconds = mins*60;
+  timerTotal = mins*60;
+  timerMode = label;
+  timerRunning = false;
+  clearInterval(timerInterval);
+  document.getElementById('timerLabel').textContent = label+' Time';
+  document.getElementById('timerIcon').innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+  updateTimerDisplay();
+  updateTimerRing();
+}
+
+function toggleTimer() {
+  if(timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    document.getElementById('timerIcon').innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+  } else {
+    timerRunning = true;
+    document.getElementById('timerIcon').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+    timerInterval = setInterval(()=>{
+      timerSeconds--;
+      updateTimerDisplay();
+      updateTimerRing();
+      if(timerSeconds<=0){
+        clearInterval(timerInterval);
+        timerRunning=false;
+        document.getElementById('timerIcon').innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+        if(timerMode==='Focus'){
+          state.pomSessions = (state.pomSessions||0)+1;
+          state.pomFocusMinutes = (state.pomFocusMinutes||0)+timerTotal/60;
+          saveState();
+          showToast('🎉 Focus session complete! Great job!');
+          launchConfetti();
+        }
+        timerSeconds=timerTotal;
+        updateTimerDisplay();
+        updateTimerRing();
+      }
+    },1000);
+  }
+}
+function resetTimer() { clearInterval(timerInterval);timerRunning=false;timerSeconds=timerTotal;document.getElementById('timerIcon').innerHTML='<polygon points="5 3 19 12 5 21 5 3"/>';updateTimerDisplay();updateTimerRing();}
+function skipTimer() { timerSeconds=0; }
+function updateTimerDisplay() {
+  const m = Math.floor(timerSeconds/60).toString().padStart(2,'0');
+  const s = (timerSeconds%60).toString().padStart(2,'0');
+  document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+}
+function updateTimerRing() {
+  const pct = timerSeconds/timerTotal;
+  const c = 628.3;
+  document.getElementById('pomRing').style.strokeDashoffset = c*(1-pct);
+}
+function setPomTab(tab, el) {
+  document.querySelectorAll('.pom-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('pomTimerView').style.display = tab==='timer'?'block':'none';
+  document.getElementById('pomStatsView').style.display = tab==='stats'?'block':'none';
+  if(tab==='stats'){
+    document.getElementById('pomStatSessions').textContent = state.pomSessions||0;
+    const m = Math.floor((state.pomFocusMinutes||0)/60);
+    const s = (state.pomFocusMinutes||0)%60;
+    document.getElementById('pomStatTime').textContent = `${m}h ${s}m`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// PLANNER SCREEN
+// ═══════════════════════════════════════════════════════
+function showPlanner() { showScreen('planner'); }
+function refreshPlanner() {
+  const now = new Date();
+  document.getElementById('plannerDate').textContent = now.toLocaleDateString('en',{month:'long',day:'numeric',year:'numeric'});
+  const todaySolved = getTodaySolved();
+  const goal = state.profile.goal||3;
+  document.getElementById('planGoal').textContent = `${todaySolved} / ${goal}`;
+  document.getElementById('planProgressBar').style.width = Math.min(100,(todaySolved/goal)*100)+'%';
+  initDefaultPlannerItems();
+  renderPlannerItems('plan');
+}
+
+function initDefaultPlannerItems() {
+  if(!state.plannerItems || !state.plannerItems.length) {
+    state.plannerItems = [
+      {id:1,text:'Solve 2 Easy problems',done:false,type:'plan',meta:'Arrays & Strings'},
+      {id:2,text:'Solve 1 Medium problem',done:false,type:'plan',meta:'Dynamic Programming'},
+      {id:3,text:'Revise 2 problems',done:false,type:'plan',meta:'Previously marked'},
+      {id:4,text:'Read DS & Algo notes',done:false,type:'plan',meta:'30 mins'},
+      {id:5,text:'Solve Daily Challenge',done:false,type:'plan',meta:'LeetCode POTD'},
+    ];
+    saveState();
+  }
+}
+
+function renderPlannerItems(tab) {
+  const items = state.plannerItems.filter(i=>tab==='done'?i.done:!i.done);
+  document.getElementById('plannerItems').innerHTML = items.map(item=>`
+    <div class="plan-item">
+      <div class="plan-check ${item.done?'done':''}" onclick="togglePlanItem(${item.id})">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="plan-text">
+        <div class="plan-task ${item.done?'done':''}">${item.text}</div>
+        <div class="plan-meta">${item.meta}</div>
+      </div>
+      <div class="plan-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="var(--t4)" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+    </div>
+  `).join('') || `<div style="text-align:center;padding:40px;color:var(--t4);font-size:14px;font-weight:600">No ${tab} items</div>`;
+}
+function togglePlanItem(id) {
+  const item = state.plannerItems.find(i=>i.id===id);
+  if(item) {item.done=!item.done;saveState();}
+  const activeTab = document.querySelector('.planner-tab.active');
+  renderPlannerItems(activeTab?.textContent.trim().toLowerCase()||'plan');
+}
+function setPlannerTab(tab, el) {
+  document.querySelectorAll('.planner-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderPlannerItems(tab);
+}
+
+// ═══════════════════════════════════════════════════════
+// TOAST & CONFETTI
+// ═══════════════════════════════════════════════════════
+let toastTimeout;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function launchConfetti() {
+  const container = document.getElementById('confetti');
+  container.innerHTML = '';
+  const colors = ['#4F8CFF','#8B5CF6','#22C55E','#FB923C','#FF5EA8','#F59E0B','#FFD700'];
+  for(let i=0;i<60;i++){
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.cssText = `
+      left:${Math.random()*100}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${1.5+Math.random()*2}s;
+      animation-delay:${Math.random()*0.5}s;
+      width:${4+Math.random()*8}px;
+      height:${8+Math.random()*12}px;
+      border-radius:${Math.random()>0.5?'50%':'2px'};
+    `;
+    container.appendChild(piece);
+  }
+  setTimeout(()=>container.innerHTML='',4000);
+}
+
+// ═══════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════
+function isToday(d) { return d.toDateString()===new Date().toDateString(); }
+function isYesterday(d) { const y=new Date();y.setDate(y.getDate()-1);return d.toDateString()===y.toDateString(); }
+function openFilterModal() { showToast('Use the filter chips above to filter problems!'); }
+
+function saveOnboarding() {
+  const name = document.getElementById('onboardName').value.trim();
+  if (!name) { showToast('Please enter your name!'); return; }
+  state.profile.name = name;
+  state.profile.goal = parseInt(document.getElementById('onboardGoal').value) || 3;
+  state.profile.onboarded = true;
+  saveState();
+  document.getElementById('onboardingModal').classList.remove('open');
+  refreshHome();
+}
+
+// ═══════════════════════════════════════════════════════
+// SPLASH & INITIALIZATION
+// ═══════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', ()=>{
+  loadState();
+
+  // Animate splash
+  setTimeout(()=>{ document.getElementById('splashFill').style.width='85%'; },200);
+  setTimeout(()=>{ document.getElementById('splashFill').style.width='100%'; },2000);
+  setTimeout(()=>{
+    const splash = document.getElementById('splash');
+    splash.style.opacity='0';
+    splash.style.transform='scale(1.05)';
+    setTimeout(()=>{
+      showScreen('home');
+      document.getElementById('bottomNav').style.display='flex';
+      // Show onboarding only on first launch
+      if (!state.profile.onboarded) {
+        document.getElementById('onboardingModal').classList.add('open');
+      }
+    },400);
+  },2600);
+
+  // Init all problem states
+  CATEGORIES.flatMap(c=>c.problems).forEach(p=>initProblemState(p.id));
+
+  // Quote rotation
+  setInterval(()=>{
+    const q = QUOTES[Math.floor(Math.random()*QUOTES.length)];
+    document.getElementById('quoteText').textContent = '"'+q.text+'"';
+    document.getElementById('quoteAuthor').textContent = q.author;
+  },30000);
+});
+</script>
+<!-- ONBOARDING MODAL -->
+<div class="modal-overlay" id="onboardingModal" style="align-items:center">
+  <div class="modal-sheet" style="border-radius:28px;margin:20px;max-height:auto">
+    <div style="padding:32px 24px">
+      <div style="text-align:center;margin-bottom:24px">
+        <div style="font-size:48px;margin-bottom:12px">👋</div>
+        <div style="font-family:var(--font2);font-size:24px;font-weight:700;color:var(--t1)">Welcome to CodeForge!</div>
+        <div style="font-size:14px;color:var(--t3);font-weight:600;margin-top:8px">Let's set up your profile to get started</div>
+      </div>
+      <div class="edit-field">
+        <div class="edit-label">Your Name</div>
+        <input class="edit-input" type="text" id="onboardName" placeholder="e.g. Arjun Singh" maxlength="30">
+      </div>
+      <div class="edit-field">
+        <div class="edit-label">Daily Goal (problems/day)</div>
+        <input class="edit-input" type="number" id="onboardGoal" placeholder="3" min="1" max="20" value="3">
+      </div>
+      <button class="save-btn" onclick="saveOnboarding()" style="margin-top:8px">Start Coding 🚀</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
